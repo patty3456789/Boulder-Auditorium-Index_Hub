@@ -1,0 +1,6 @@
+{
+  "name": "Boulder Auditorium Audio Operations",
+  "description": "Boulder High School Auditorium FOH audio operations hub featuring photo-traced CAD rack schematics, persistent show runbooks, system asset database, and deep Behringer X32 technical wiki.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

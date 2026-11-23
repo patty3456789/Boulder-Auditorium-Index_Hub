@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boulder High School - Show Configuration & Audio Dashboard</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent-color: #38bdf8;
+            --border-color: #334155;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+        }
+
+        .app-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .app-header h1 {
+            margin: 0;
+            color: var(--accent-color);
+        }
+
+        .dashboard-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .diagram-box {
+            height: 200px;
+            position: relative;
+            margin-top: 15px;
+        }
+
+        .outline-border {
+            width: 100%;
+            height: 100%;
+            border: 2px dashed var(--border-color);
+            border-radius: 6px;
+            position: relative;
+            background-color: rgba(15, 23, 42, 0.4);
+        }
+
+        .node-point {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            background-color: var(--accent-color);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--accent-color);
+        }
+
+        .notes-category {
+            margin-top: 15px;
+            border-top: 1px solid var(--border-color);
+            padding-top: 10px;
+        }
+
+        .notes-category h3 {
+            color: var(--accent-color);
+            font-size: 1.1rem;
+        }
+
+        ul {
+            padding-left: 20px;
+            color: var(--text-muted);
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        strong {
+            color: var(--text-color);
+        }
+    </style>
+</head>
+<body>
+    <header class="app-header">
+        <h1>Boulder Auditorium Audio Setup</h1>
+        <p>FOH Configuration & System Reference</p>
+    </header>
+
+    <main class="dashboard-container">
+        <!-- Front Page Section -->
+        <section id="front-page" class="card">
+            <h2>Boulder Auditorium</h2>
+            <div class="config-summary">
+                <p>Welcome to the BHS audio control system dashboard. Use this tool to manage show configurations, check system routing, and reference quick audio notes.</p>
+            </div>
+        </section>
+
+        <!-- Diagrams Section -->
+        <section id="diagrams-section" class="card-grid">
+            <div class="card diagram-card">
+                <h3>Rack Schematic Outline</h3>
+                <div class="diagram-box rack-outline">
+                    <div class="outline-border">
+                        <span class="node-point" style="top: 20px; left: 20px;" title="Wireless Receiver A"></span>
+                        <span class="node-point" style="top: 60px; left: 20px;" title="Wireless Receiver B"></span>
+                        <span class="node-point" style="top: 100px; left: 20px;" title="Stage Snake / I/O Box"></span>
+                        <span class="node-point" style="top: 140px; left: 20px;" title="Power Conditioner"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card diagram-card">
+                <h3>Booth / FOH Schematic Outline</h3>
+                <div class="diagram-box booth-outline">
+                    <div class="outline-border">
+                        <span class="node-point" style="top: 40px; left: 40px;" title="X32 Console"></span>
+                        <span class="node-point" style="top: 40px; right: 40px;" title="Playback Laptop / PC"></span>
+                        <span class="node-point" style="bottom: 30px; left: 50%; transform: translateX(-50%);" title="FOH Monitor Position"></span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Notes Section -->
+        <section id="notes-section" class="card">
+            <h2>System Notes & Reference</h2>
+            
+            <div class="notes-category">
+                <h3>Quick Hits</h3>
+                <ul>
+                    <li>Always check phantom power (+48V) status before plugging in condenser mics.</li>
+                    <li>Verify gain staging before pushing faders up during soundcheck.</li>
+                    <li>Mute unused channels to keep the noise floor low.</li>
+                </ul>
+            </div>
+
+            <div class="notes-category">
+                <h3>Vocabulary</h3>
+                <ul>
+                    <li><strong>Gain / Trim:</strong> Preamp control setting the initial input signal level.</li>
+                    <li><strong>Phantom Power (+48V):</strong> DC voltage supplied down the mic cable to power active electronics like condensers.</li>
+                    <li><strong>Bus / Subgroup:</strong> A routing pathway used to group multiple channels together (e.g., all vocal mics).</li>
+                </ul>
+            </div>
+
+            <div class="notes-category">
+                <h3>X32 Specifics</h3>
+                <ul>
+                    <li>Use the <strong>Home</strong> and <strong>Config</strong> tabs to manage preamp gain, phantom power, and delay.</li>
+                    <li>Assign DCA groups to physical faders for easy multi-channel volume control.</li>
+                    <li>Save scene snapshots frequently before major show transitions.</li>
+                </ul>
+            </div>
+
+            <div class="notes-category">
+                <h3>BHS Specifics</h3>
+                <ul>
+                    <li>Stage inputs route directly through the patch panel on stage left into the main stage box.</li>
+                    <li>Main house speakers are permanently tuned for the Boulder Auditorium acoustics—avoid heavy graphic EQ boosts in the high-mid range.</li>
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <script src="system-db.js"></script>
+    <script src="show-conig.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
