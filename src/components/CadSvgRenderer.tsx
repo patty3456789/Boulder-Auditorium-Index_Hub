@@ -1,16 +1,22 @@
 import React from 'react';
+import { SignalTraceStage } from '../data/signalTraces';
 import { CadBlueprint, CadUnit } from '../types';
 
 interface CadSvgRendererProps {
   blueprint: CadBlueprint;
   selectedUnitId: string;
   onSelectUnit: (unitId: string) => void;
+  traceStages?: SignalTraceStage[];
+  activeTraceStep?: number | null;
 }
 
 const STROKE_BASE = '#52525b';
 const STROKE_MUTED = '#2e2e36';
-const STROKE_HOVER = '#9d7cd8';
-const STROKE_ACTIVE = '#38bdf8';
+const STROKE_INACTIVE_ACCENT = '#a1a1aa';
+const STROKE_ACTIVE = '#9d7cd8';
+const FILL_SELECTED = '#161221';
+const WHITE = '#e4e4e7';
+const GRAY_MID = '#71717a';
 
 function renderRackFrame(
   frame: NonNullable<CadBlueprint['rackFrame']>,
@@ -105,8 +111,15 @@ function renderRackFrame(
   );
 }
 
-function renderMotifArt(unit: CadUnit, stroke: string, accent: string) {
+function renderMotifArt(
+  unit: CadUnit,
+  stroke: string,
+  accent: string,
+  isSelected: boolean
+) {
   const { x, y, width, height, motif } = unit;
+  const hi = isSelected ? STROKE_ACTIVE : WHITE;
+  const sub = isSelected ? WHITE : GRAY_MID;
 
   switch (motif) {
     case 'furman-ae-m8dx': {
@@ -122,11 +135,40 @@ function renderMotifArt(unit: CadUnit, stroke: string, accent: string) {
           <rect x={x + 14} y={y + height * 0.54} width={14} height={12} fill="none" stroke={stroke} strokeWidth={0.8} />
           <circle cx={x + 42} cy={y + height * 0.72} r={4} fill="none" stroke={stroke} strokeWidth={0.8} />
           <rect x={x + 62} y={y + height * 0.55} width={44} height={12} fill="#09090b" stroke={stroke} strokeWidth={0.8} />
-          <text x={x + 84} y={y + height * 0.75} textAnchor="middle" fill={accent} fontSize="7" fontFamily="JetBrains Mono, monospace">
+          <text x={x + 84} y={y + height * 0.75} textAnchor="middle" fill={hi} fontSize="7" fontFamily="JetBrains Mono, monospace">
             117V
           </text>
-          <circle cx={x + width * 0.56} cy={y + height * 0.72} r={2} fill="#22c55e" />
-          <rect x={x + width - 38} y={y + height * 0.56} width={16} height={11} fill="none" stroke="#ef4444" strokeWidth={0.9} />
+          <circle cx={x + width * 0.56} cy={y + height * 0.72} r={2} fill={hi} />
+          <rect x={x + width - 38} y={y + height * 0.56} width={16} height={11} fill="none" stroke={hi} strokeWidth={0.9} />
+        </g>
+      );
+    }
+
+    case 'furman-m8x2': {
+      if (height <= 36) {
+        return (
+          <g>
+            <rect x={x + 12} y={y + 6} width={14} height={height - 12} fill="none" stroke={stroke} strokeWidth={0.8} />
+            <circle cx={x + 38} cy={y + height / 2} r={3.5} fill="none" stroke={stroke} strokeWidth={0.8} />
+            <circle cx={x + 52} cy={y + height / 2} r={3.5} fill="none" stroke={stroke} strokeWidth={0.8} />
+            <text x={x + width / 2} y={y + height / 2 + 2.5} textAnchor="middle" fill={sub} fontSize="6.5" fontFamily="JetBrains Mono, monospace">
+              FURMAN POWER CONDITIONER
+            </text>
+            <circle cx={x + width - 42} cy={y + height / 2} r={2} fill={hi} />
+            <rect x={x + width - 30} y={y + 7} width={16} height={height - 14} fill="none" stroke={hi} strokeWidth={0.9} />
+          </g>
+        );
+      }
+      return (
+        <g>
+          <rect x={x + 14} y={y + 12} width={width - 28} height={height - 24} fill="#09090d" stroke={STROKE_MUTED} strokeWidth={0.8} />
+          <rect x={x + 26} y={y + 20} width={68} height={height - 40} fill="#060608" stroke={accent} strokeWidth={0.9} />
+          <text x={x + 60} y={y + height / 2 + 2} textAnchor="middle" fill={hi} fontSize="6.5" fontFamily="JetBrains Mono, monospace">
+            UPS OK
+          </text>
+          <text x={x + width - 26} y={y + height / 2 + 2} textAnchor="end" fill={sub} fontSize="7" fontFamily="JetBrains Mono, monospace">
+            TRIPP LITE BATTERY BACKUP
+          </text>
         </g>
       );
     }
@@ -144,10 +186,10 @@ function renderMotifArt(unit: CadUnit, stroke: string, accent: string) {
                 <circle cx={x + 16} cy={ry + rowH / 2} r={2.4} fill="none" stroke={stroke} strokeWidth={0.8} />
                 <circle cx={x + 28} cy={ry + rowH / 2} r={2.4} fill="none" stroke={stroke} strokeWidth={0.8} />
                 <rect x={x + 44} y={ry + 4} width={64} height={rowH - 8} fill="none" stroke={STROKE_MUTED} strokeWidth={0.7} />
-                <text x={x + 76} y={ry + rowH / 2 + 2.5} textAnchor="middle" fill={stroke} fontSize="6" fontFamily="JetBrains Mono, monospace">
+                <text x={x + 76} y={ry + rowH / 2 + 2.5} textAnchor="middle" fill={sub} fontSize="6" fontFamily="JetBrains Mono, monospace">
                   SHURE UA844+SWB
                 </text>
-                <circle cx={x + width - 38} cy={ry + rowH / 2} r={1.8} fill="#22c55e" />
+                <circle cx={x + width - 38} cy={ry + rowH / 2} r={1.8} fill={hi} />
                 <circle cx={x + width - 22} cy={ry + rowH / 2} r={2.4} fill="none" stroke={stroke} strokeWidth={0.8} />
                 <circle cx={x + width - 11} cy={ry + rowH / 2} r={2.4} fill="none" stroke={stroke} strokeWidth={0.8} />
               </g>
@@ -185,11 +227,8 @@ function renderMotifArt(unit: CadUnit, stroke: string, accent: string) {
                   }
                   return (
                     <g key={`rx-${r}-${col}`}>
-                      {/* Yellow number tag */}
-                      <rect x={cx + 8} y={ry + 5} width={11} height={rowH - 10} fill="none" stroke="#eab308" strokeWidth={0.8} />
-                      {/* LCD screen */}
+                      <rect x={cx + 8} y={ry + 5} width={11} height={rowH - 10} fill="none" stroke={sub} strokeWidth={0.8} />
                       <rect x={cx + 26} y={ry + 4} width={44} height={rowH - 8} fill="#09090c" stroke={accent} strokeWidth={0.7} />
-                      {/* Group/Channel buttons + RF bars */}
                       <circle cx={cx + 82} cy={ry + rowH / 2} r={2.2} fill="none" stroke={stroke} strokeWidth={0.8} />
                       <circle cx={cx + 94} cy={ry + rowH / 2} r={2.2} fill="none" stroke={stroke} strokeWidth={0.8} />
                       <rect x={cx + halfW - 34} y={ry + 6} width={16} height={rowH - 12} fill="none" stroke={STROKE_MUTED} strokeWidth={0.7} />
@@ -213,7 +252,7 @@ function renderMotifArt(unit: CadUnit, stroke: string, accent: string) {
               <g key={`lcd-${idx}`}>
                 <rect x={sx} y={y + 8} width={scrW} height={height - 16} fill="#070709" stroke={accent} strokeWidth={1} />
                 <line x1={sx + 4} y1={y + height - 20} x2={sx + scrW - 4} y2={y + height - 20} stroke={STROKE_MUTED} strokeWidth={0.6} />
-                <text x={sx + scrW / 2} y={y + height / 2 - 1} textAnchor="middle" fill={stroke} fontSize="7" fontFamily="JetBrains Mono, monospace">
+                <text x={sx + scrW / 2} y={y + height / 2 - 1} textAnchor="middle" fill={sub} fontSize="7" fontFamily="JetBrains Mono, monospace">
                   PREVIEW {idx === 0 ? 'A' : 'B'}
                 </text>
               </g>
@@ -228,10 +267,10 @@ function renderMotifArt(unit: CadUnit, stroke: string, accent: string) {
         <g>
           <rect x={x + 28} y={y + 8} width={width - 56} height={height - 16} fill="#09090d" stroke={accent} strokeWidth={1.1} />
           <rect x={x + 36} y={y + 15} width={width - 72} height={height - 30} fill="none" stroke={STROKE_MUTED} strokeWidth={0.8} />
-          <text x={x + width / 2} y={y + height / 2 - 2} textAnchor="middle" fill={accent} fontSize="8" fontFamily="JetBrains Mono, monospace">
+          <text x={x + width / 2} y={y + height / 2 - 2} textAnchor="middle" fill={hi} fontSize="8" fontFamily="JetBrains Mono, monospace">
             CRESTRON TOUCHPANEL
           </text>
-          <text x={x + width / 2} y={y + height / 2 + 10} textAnchor="middle" fill={stroke} fontSize="6.5" fontFamily="JetBrains Mono, monospace">
+          <text x={x + width / 2} y={y + height / 2 + 10} textAnchor="middle" fill={sub} fontSize="6.5" fontFamily="JetBrains Mono, monospace">
             BOULDER PANTHERS EST. 1875
           </text>
         </g>
@@ -243,20 +282,17 @@ function renderMotifArt(unit: CadUnit, stroke: string, accent: string) {
       const h2 = height * 0.5;
       return (
         <g>
-          {/* CP4N 1U */}
           <rect x={x + 12} y={y + 6} width={110} height={h1 - 8} fill="none" stroke={stroke} strokeWidth={0.8} />
-          <text x={x + width - 14} y={y + h1 * 0.68} textAnchor="end" fill={accent} fontSize="6.5" fontFamily="JetBrains Mono, monospace">
+          <text x={x + width - 14} y={y + h1 * 0.68} textAnchor="end" fill={hi} fontSize="6.5" fontFamily="JetBrains Mono, monospace">
             CRESTRON CP4N
           </text>
           <line x1={x} y1={y + h1} x2={x + width} y2={y + h1} stroke={STROKE_MUTED} strokeWidth={0.8} />
-          {/* Q-SYS Core 110f 1U */}
           <rect x={x + 12} y={y + h1 + 6} width={44} height={h1 - 10} fill="#09090c" stroke={accent} strokeWidth={0.9} />
-          <text x={x + 68} y={y + h1 + h1 * 0.65} fill={accent} fontSize="7" fontFamily="JetBrains Mono, monospace">
+          <text x={x + 68} y={y + h1 + h1 * 0.65} fill={hi} fontSize="7" fontFamily="JetBrains Mono, monospace">
             QSC Q-SYS CORE 110f
           </text>
-          <circle cx={x + width - 18} cy={y + h1 + h1 * 0.5} r={3} fill="#22c55e" />
+          <circle cx={x + width - 18} cy={y + h1 + h1 * 0.5} r={3} fill={hi} />
           <line x1={x} y1={y + h2} x2={x + width} y2={y + h2} stroke={STROKE_MUTED} strokeWidth={0.8} />
-          {/* Vented NVX shelf */}
           {Array.from({ length: 12 }, (_, v) => (
             <line key={`nvx-${v}`} x1={x + 20 + v * 21} y1={y + h2 + 8} x2={x + 20 + v * 21} y2={y + height - 8} stroke={STROKE_MUTED} strokeWidth={1.2} />
           ))}
@@ -269,16 +305,15 @@ function renderMotifArt(unit: CadUnit, stroke: string, accent: string) {
       return (
         <g>
           <rect x={x + 16} y={y + 6} width={70} height={h1 - 12} fill="none" stroke={accent} strokeWidth={0.8} />
-          <text x={x + 98} y={y + h1 * 0.58} fill={stroke} fontSize="6.5" fontFamily="JetBrains Mono, monospace">
+          <text x={x + 98} y={y + h1 * 0.58} fill={sub} fontSize="6.5" fontFamily="JetBrains Mono, monospace">
             LISTEN ADA WI-FI SERVER
           </text>
           <line x1={x} y1={y + h1} x2={x + width} y2={y + h1} stroke={STROKE_MUTED} strokeWidth={0.8} />
-          {/* Lower Furman M-8x2 */}
           <rect x={x + 14} y={y + h1 + 8} width={28} height={height - h1 - 16} fill="none" stroke={stroke} strokeWidth={0.9} />
-          <text x={x + width / 2} y={y + h1 + (height - h1) / 2 + 2} textAnchor="middle" fill="#eab308" fontSize="6.5" fontFamily="JetBrains Mono, monospace">
+          <text x={x + width / 2} y={y + h1 + (height - h1) / 2 + 2} textAnchor="middle" fill={hi} fontSize="6.5" fontFamily="JetBrains Mono, monospace">
             MASTER POWER (LEAVE ON)
           </text>
-          <rect x={x + width - 32} y={y + h1 + 10} width={16} height={10} fill="none" stroke="#ef4444" strokeWidth={0.9} />
+          <rect x={x + width - 32} y={y + h1 + 10} width={16} height={10} fill="none" stroke={hi} strokeWidth={0.9} />
         </g>
       );
     }
@@ -294,17 +329,15 @@ function renderMotifArt(unit: CadUnit, stroke: string, accent: string) {
             return (
               <g key={`xti-${i}`}>
                 {i > 0 && <line x1={x} y1={ay} x2={x + width} y2={ay} stroke={STROKE_MUTED} strokeWidth={0.9} />}
-                {/* Left & Right Vent Grilles */}
                 <rect x={x + 10} y={ay + 6} width={66} height={ampH - 12} fill="#08080a" stroke={STROKE_MUTED} strokeWidth={0.8} />
                 <rect x={x + width - 76} y={ay + 6} width={66} height={ampH - 12} fill="#08080a" stroke={STROKE_MUTED} strokeWidth={0.8} />
-                {/* Center LCD + 2 Gain Knobs */}
                 <circle cx={x + width / 2 - 44} cy={ay + ampH / 2} r={6} fill="none" stroke={stroke} strokeWidth={1} />
                 <rect x={x + width / 2 - 28} y={ay + 7} width={56} height={ampH - 14} fill="#09090d" stroke={accent} strokeWidth={0.8} />
-                <text x={x + width / 2} y={ay + ampH / 2 + 2} textAnchor="middle" fill={accent} fontSize="6" fontFamily="JetBrains Mono, monospace">
+                <text x={x + width / 2} y={ay + ampH / 2 + 2} textAnchor="middle" fill={hi} fontSize="6" fontFamily="JetBrains Mono, monospace">
                   PRESET 6
                 </text>
                 <circle cx={x + width / 2 + 44} cy={ay + ampH / 2} r={6} fill="none" stroke={stroke} strokeWidth={1} />
-                <text x={x + 43} y={ay + ampH / 2 + 2.5} textAnchor="middle" fill={i === 3 ? '#eab308' : '#38bdf8'} fontSize="6.5" fontFamily="JetBrains Mono, monospace">
+                <text x={x + 43} y={ay + ampH / 2 + 2.5} textAnchor="middle" fill={i === 3 ? hi : sub} fontSize="6.5" fontFamily="JetBrains Mono, monospace">
                   {tags[i]}
                 </text>
               </g>
@@ -317,10 +350,9 @@ function renderMotifArt(unit: CadUnit, stroke: string, accent: string) {
     case 'genelec-monitor': {
       return (
         <g>
-          {/* Left & Right Genelec Monitors angled inward */}
           {[
-            { cx: x + 28, dir: 1 },
-            { cx: x + width - 28, dir: -1 }
+            { cx: x + 28 },
+            { cx: x + width - 28 }
           ].map((mon, idx) => (
             <g key={`gen-${idx}`}>
               <rect
@@ -345,7 +377,6 @@ function renderMotifArt(unit: CadUnit, stroke: string, accent: string) {
     case 'x32-preamp-eq': {
       return (
         <g>
-          {/* 4 rows of Channel Strip Encoders */}
           {Array.from({ length: 4 }, (_, r) =>
             Array.from({ length: 5 }, (_, c) => (
               <circle
@@ -359,7 +390,7 @@ function renderMotifArt(unit: CadUnit, stroke: string, accent: string) {
               />
             ))
           )}
-          <text x={x + 8} y={y + height - 6} fill={accent} fontSize="6.5" fontFamily="JetBrains Mono, monospace">
+          <text x={x + 8} y={y + height - 6} fill={hi} fontSize="6.5" fontFamily="JetBrains Mono, monospace">
             CONFIG / GATE / DYN / PEQ / BUS SENDS
           </text>
         </g>
@@ -369,14 +400,11 @@ function renderMotifArt(unit: CadUnit, stroke: string, accent: string) {
     case 'x32-display-mon': {
       return (
         <g>
-          {/* 7-inch TFT screen */}
           <rect x={x + 10} y={y + 8} width={92} height={58} fill="#07070a" stroke={accent} strokeWidth={1.1} />
           <path d={`M ${x + 16} ${y + 44} Q ${x + 56} ${y + 22} ${x + 96} ${y + 48}`} fill="none" stroke="#9d7cd8" strokeWidth={1.2} />
-          {/* 6 Push Encoders below TFT */}
           {Array.from({ length: 6 }, (_, i) => (
             <circle key={`tft-enc-${i}`} cx={x + 18 + i * 15} cy={y + 78} r={3.5} fill="none" stroke={stroke} strokeWidth={0.8} />
           ))}
-          {/* Talkback & Monitor knobs on right */}
           <circle cx={x + width - 22} cy={y + 24} r={6} fill="none" stroke={stroke} strokeWidth={0.9} />
           <circle cx={x + width - 22} cy={y + 48} r={6} fill="none" stroke={stroke} strokeWidth={0.9} />
           <line x1={x + width - 10} y1={y + 16} x2={x + width - 4} y2={y + 62} stroke={accent} strokeWidth={1.2} />
@@ -396,26 +424,23 @@ function renderMotifArt(unit: CadUnit, stroke: string, accent: string) {
             const isMain = motif === 'x32-faders-dca' && i === faderCount - 1;
             return (
               <g key={`fad-${i}`}>
-                {/* Scribble Strip LCD */}
                 <rect
                   x={fx - step * 0.38}
                   y={y + 10}
                   width={step * 0.76}
                   height={11}
                   fill="#09090d"
-                  stroke={isMain ? '#ef4444' : i % 2 === 0 ? accent : '#9d7cd8'}
+                  stroke={isMain ? WHITE : i % 2 === 0 ? accent : '#9d7cd8'}
                   strokeWidth={0.7}
                 />
-                {/* Fader track */}
                 <line x1={fx} y1={y + 30} x2={fx} y2={y + height - 12} stroke={STROKE_MUTED} strokeWidth={1.2} />
-                {/* Fader cap */}
                 <rect
                   x={fx - 4.5}
                   y={y + capOffset}
                   width={9}
                   height={13}
                   fill="#18181b"
-                  stroke={isMain ? '#ef4444' : stroke}
+                  stroke={isMain ? '#9d7cd8' : stroke}
                   strokeWidth={0.9}
                 />
               </g>
@@ -428,7 +453,7 @@ function renderMotifArt(unit: CadUnit, stroke: string, accent: string) {
     case 'x32-scenes-assign': {
       return (
         <g>
-          <text x={x + 8} y={y + 16} fill={accent} fontSize="6.5" fontFamily="JetBrains Mono, monospace">
+          <text x={x + 8} y={y + 16} fill={hi} fontSize="6.5" fontFamily="JetBrains Mono, monospace">
             SCENES / ASSIGN / MUTE GRP
           </text>
           {Array.from({ length: 4 }, (_, r) =>
@@ -440,7 +465,7 @@ function renderMotifArt(unit: CadUnit, stroke: string, accent: string) {
                 width={22}
                 height={14}
                 fill="#09090d"
-                stroke={r === 3 ? '#ef4444' : stroke}
+                stroke={r === 3 ? accent : stroke}
                 strokeWidth={0.8}
               />
             ))
@@ -464,7 +489,7 @@ function renderMotifArt(unit: CadUnit, stroke: string, accent: string) {
                 strokeDasharray="4 2"
                 strokeWidth={0.9}
               />
-              <text x={x + 68 + b * 124} y={y + height / 2 + 4} textAnchor="middle" fill={stroke} fontSize="6.5" fontFamily="JetBrains Mono, monospace">
+              <text x={x + 68 + b * 124} y={y + height / 2 + 4} textAnchor="middle" fill={sub} fontSize="6.5" fontFamily="JetBrains Mono, monospace">
                 ATMOS STAGE #{b + 1}
               </text>
             </g>
@@ -476,9 +501,8 @@ function renderMotifArt(unit: CadUnit, stroke: string, accent: string) {
     case 'bhs-conduit-trunk': {
       return (
         <g>
-          {/* Wall conduit boxes and bundled blue Cat6 cables dropping into rack */}
           <rect x={x + 18} y={y + 6} width={64} height={24} fill="#111116" stroke={stroke} strokeWidth={1} />
-          <text x={x + 50} y={y + 21} textAnchor="middle" fill={stroke} fontSize="6.5" fontFamily="JetBrains Mono, monospace">
+          <text x={x + 50} y={y + 21} textAnchor="middle" fill={sub} fontSize="6.5" fontFamily="JetBrains Mono, monospace">
             MDBA PANEL
           </text>
           {Array.from({ length: 6 }, (_, i) => (
@@ -486,7 +510,7 @@ function renderMotifArt(unit: CadUnit, stroke: string, accent: string) {
               key={`cat6-${i}`}
               d={`M ${x + 130 + i * 16} ${y + 6} C ${x + 130 + i * 16} ${y + 30}, ${x + 140 + i * 10} ${y + 34}, ${x + 140 + i * 10} ${y + height}`}
               fill="none"
-              stroke="#38bdf8"
+              stroke="#9d7cd8"
               strokeWidth={1.3}
               opacity={0.75}
             />
@@ -500,14 +524,13 @@ function renderMotifArt(unit: CadUnit, stroke: string, accent: string) {
       const sliceH = height / slices;
       return (
         <g>
-          {/* Perforated mesh door overlay lines */}
           {Array.from({ length: slices }, (_, i) => {
             const sy = y + i * sliceH;
             return (
               <g key={`bhs-u-${i}`}>
                 {i > 0 && <line x1={x} y1={sy} x2={x + width} y2={sy} stroke={STROKE_MUTED} strokeWidth={0.8} />}
                 <rect x={x + 10} y={sy + 7} width={width - 60} height={sliceH - 14} fill="none" stroke={STROKE_MUTED} strokeDasharray="2 2" strokeWidth={0.7} />
-                <circle cx={x + width - 32} cy={sy + sliceH / 2} r={2} fill="#22c55e" />
+                <circle cx={x + width - 32} cy={sy + sliceH / 2} r={2} fill={hi} />
                 <rect x={x + width - 20} y={sy + 6} width={14} height={sliceH - 12} fill="#18181b" stroke={accent} strokeWidth={0.7} />
               </g>
             );
@@ -519,12 +542,12 @@ function renderMotifArt(unit: CadUnit, stroke: string, accent: string) {
     case 'servoreeler-src': {
       return (
         <g>
-          <rect x={x + 12} y={y + 16} width={16} height={18} fill="none" stroke="#f59e0b" strokeWidth={1} />
-          <text x={x + width / 2} y={y + height / 2 + 2} textAnchor="middle" fill={stroke} fontSize="7" fontFamily="JetBrains Mono, monospace">
+          <rect x={x + 12} y={y + 15} width={16} height={height - 30} fill="none" stroke={hi} strokeWidth={1} />
+          <text x={x + width / 2} y={y + height / 2 + 2.5} textAnchor="middle" fill={sub} fontSize="7" fontFamily="JetBrains Mono, monospace">
             SERVOREELER SRC
           </text>
-          <circle cx={x + width - 34} cy={y + height / 2} r={6} fill="none" stroke="#22c55e" strokeWidth={1} />
-          <circle cx={x + width - 16} cy={y + height / 2} r={6} fill="none" stroke="#ef4444" strokeWidth={1} />
+          <circle cx={x + width - 36} cy={y + height / 2} r={6} fill="none" stroke={hi} strokeWidth={1} />
+          <circle cx={x + width - 16} cy={y + height / 2} r={6} fill="none" stroke={accent} strokeWidth={1} />
         </g>
       );
     }
@@ -532,11 +555,11 @@ function renderMotifArt(unit: CadUnit, stroke: string, accent: string) {
     case 'clearcom-ms702': {
       return (
         <g>
-          <rect x={x + 10} y={y + 10} width={34} height={height - 20} fill="none" stroke={stroke} strokeWidth={0.8} />
-          <circle cx={x + 64} cy={y + height / 2} r={7} fill="none" stroke={accent} strokeWidth={1} />
-          <circle cx={x + 92} cy={y + height / 2} r={7} fill="none" stroke={accent} strokeWidth={1} />
-          <text x={x + width - 12} y={y + height / 2 + 2} textAnchor="end" fill={stroke} fontSize="6.5" fontFamily="JetBrains Mono, monospace">
-            CH A / CH B
+          <rect x={x + 10} y={y + 6} width={32} height={height - 12} fill="none" stroke={stroke} strokeWidth={0.8} />
+          <circle cx={x + 62} cy={y + height / 2} r={5} fill="none" stroke={accent} strokeWidth={1} />
+          <circle cx={x + 86} cy={y + height / 2} r={5} fill="none" stroke={accent} strokeWidth={1} />
+          <text x={x + width - 12} y={y + height / 2 + 2.5} textAnchor="end" fill={sub} fontSize="6.5" fontFamily="JetBrains Mono, monospace">
+            CLEAR-COM MS-702 · CH A / B
           </text>
         </g>
       );
@@ -545,10 +568,10 @@ function renderMotifArt(unit: CadUnit, stroke: string, accent: string) {
     case 'clearcom-dx210': {
       return (
         <g>
-          <line x1={x + 14} y1={y + height - 8} x2={x + 14} y2={y + 4} stroke={accent} strokeWidth={1.3} />
-          <line x1={x + width - 14} y1={y + height - 8} x2={x + width - 14} y2={y + 4} stroke={accent} strokeWidth={1.3} />
-          <rect x={x + 36} y={y + 12} width={width - 72} height={height - 24} fill="#09090d" stroke={stroke} strokeWidth={0.8} />
-          <text x={x + width / 2} y={y + height / 2 + 2} textAnchor="middle" fill={accent} fontSize="7" fontFamily="JetBrains Mono, monospace">
+          <line x1={x + 14} y1={y + height - 5} x2={x + 14} y2={y + 4} stroke={accent} strokeWidth={1.3} />
+          <line x1={x + width - 14} y1={y + height - 5} x2={x + width - 14} y2={y + 4} stroke={accent} strokeWidth={1.3} />
+          <rect x={x + 36} y={y + 6} width={width - 72} height={height - 12} fill="#09090d" stroke={stroke} strokeWidth={0.8} />
+          <text x={x + width / 2} y={y + height / 2 + 2.5} textAnchor="middle" fill={hi} fontSize="6.5" fontFamily="JetBrains Mono, monospace">
             HME DX210 · 2.4GHz
           </text>
         </g>
@@ -560,7 +583,7 @@ function renderMotifArt(unit: CadUnit, stroke: string, accent: string) {
         <g>
           <circle cx={x + 28} cy={y + height / 2} r={7} fill="none" stroke={stroke} strokeWidth={1} />
           <rect x={x + 54} y={y + 10} width={width - 108} height={height - 20} fill="#09090d" stroke={accent} strokeWidth={0.9} />
-          <text x={x + width / 2} y={y + height / 2 + 2} textAnchor="middle" fill={accent} fontSize="6.5" fontFamily="JetBrains Mono, monospace">
+          <text x={x + width / 2} y={y + height / 2 + 2.5} textAnchor="middle" fill={hi} fontSize="6.5" fontFamily="JetBrains Mono, monospace">
             STEREO BYPASS
           </text>
           <circle cx={x + width - 28} cy={y + height / 2} r={7} fill="none" stroke={stroke} strokeWidth={1} />
@@ -578,10 +601,10 @@ function renderMotifArt(unit: CadUnit, stroke: string, accent: string) {
             return (
               <g key={`inuke-${i}`}>
                 {i > 0 && <line x1={x} y1={uy} x2={x + width} y2={uy} stroke={STROKE_MUTED} strokeWidth={0.8} />}
-                <rect x={x + 12} y={uy + 6} width={38} height={uh - 12} fill="#08080a" stroke={STROKE_MUTED} strokeWidth={0.8} />
-                <circle cx={x + width / 2 - 20} cy={uy + uh / 2} r={6} fill="none" stroke={accent} strokeWidth={1} />
-                <circle cx={x + width / 2 + 20} cy={uy + uh / 2} r={6} fill="none" stroke={accent} strokeWidth={1} />
-                <rect x={x + width - 50} y={uy + 6} width={38} height={uh - 12} fill="#08080a" stroke={STROKE_MUTED} strokeWidth={0.8} />
+                <rect x={x + 12} y={uy + 6} width={44} height={uh - 12} fill="#08080a" stroke={STROKE_MUTED} strokeWidth={0.8} />
+                <circle cx={x + width / 2 - 22} cy={uy + uh / 2} r={6} fill="none" stroke={accent} strokeWidth={1} />
+                <circle cx={x + width / 2 + 22} cy={uy + uh / 2} r={6} fill="none" stroke={accent} strokeWidth={1} />
+                <rect x={x + width - 56} y={uy + 6} width={44} height={uh - 12} fill="#08080a" stroke={STROKE_MUTED} strokeWidth={0.8} />
               </g>
             );
           })}
@@ -590,17 +613,19 @@ function renderMotifArt(unit: CadUnit, stroke: string, accent: string) {
     }
 
     case 'behringer-s16': {
+      const cols = 10;
+      const spacing = (width - 40) / (cols - 1);
       return (
         <g>
-          {Array.from({ length: 8 }, (_, col) =>
+          {Array.from({ length: cols }, (_, col) =>
             [0, 1].map((row) => (
               <circle
                 key={`xlr-${col}-${row}`}
-                cx={x + 20 + col * 22}
-                cy={y + 20 + row * 24}
+                cx={x + 20 + col * spacing}
+                cy={y + 24 + row * 26}
                 r={6.5}
                 fill="#070709"
-                stroke={stroke}
+                stroke={row === 1 ? accent : stroke}
                 strokeWidth={0.9}
               />
             ))
@@ -612,13 +637,13 @@ function renderMotifArt(unit: CadUnit, stroke: string, accent: string) {
     case 'etc-quicktouch': {
       return (
         <g>
-          <rect x={x + 12} y={y + 12} width={width - 24} height={height - 24} fill="#09090d" stroke={stroke} strokeWidth={1} />
-          <rect x={x + 28} y={y + 24} width={width - 56} height={54} fill="#050507" stroke={accent} strokeWidth={1} />
-          <text x={x + width / 2} y={y + 54} textAnchor="middle" fill={accent} fontSize="7" fontFamily="JetBrains Mono, monospace">
+          <rect x={x + 12} y={y + 14} width={width - 24} height={height - 28} fill="#09090d" stroke={stroke} strokeWidth={1} />
+          <rect x={x + 28} y={y + 26} width={width - 56} height={56} fill="#050507" stroke={accent} strokeWidth={1} />
+          <text x={x + width / 2} y={y + 57} textAnchor="middle" fill={hi} fontSize="7" fontFamily="JetBrains Mono, monospace">
             ETC QUICKTOUCH RIGGING
           </text>
-          <circle cx={x + 44} cy={y + height - 36} r={11} fill="none" stroke="#22c55e" strokeWidth={1.1} />
-          <circle cx={x + width - 44} cy={y + height - 36} r={12} fill="none" stroke="#ef4444" strokeWidth={1.3} />
+          <circle cx={x + 44} cy={y + height - 38} r={11} fill="none" stroke={hi} strokeWidth={1.1} />
+          <circle cx={x + width - 44} cy={y + height - 38} r={12} fill="none" stroke={accent} strokeWidth={1.3} />
         </g>
       );
     }
@@ -634,9 +659,9 @@ function renderMotifArt(unit: CadUnit, stroke: string, accent: string) {
             return (
               <g key={`sif-${i}`}>
                 <circle cx={fx} cy={y + 22} r={3.5} fill="none" stroke={stroke} strokeWidth={0.8} />
-                <rect x={fx - 3} y={y + 34} width={6} height={24} fill="none" stroke="#22c55e" strokeWidth={0.7} />
+                <rect x={fx - 3} y={y + 34} width={6} height={24} fill="none" stroke={sub} strokeWidth={0.7} />
                 <line x1={fx} y1={y + 68} x2={fx} y2={y + height - 16} stroke={STROKE_MUTED} strokeWidth={1.1} />
-                <rect x={fx - 4.5} y={y + pos} width={9} height={14} fill="#18181b" stroke={i >= faders - 2 ? '#ef4444' : accent} strokeWidth={0.9} />
+                <rect x={fx - 4.5} y={y + pos} width={9} height={14} fill="#18181b" stroke={i >= faders - 2 ? hi : accent} strokeWidth={0.9} />
               </g>
             );
           })}
@@ -645,7 +670,7 @@ function renderMotifArt(unit: CadUnit, stroke: string, accent: string) {
     }
 
     case 'si-strip-dsp': {
-      const cols = ['#38bdf8', '#22c55e', '#ef4444', '#eab308'];
+      const cols = [WHITE, '#9d7cd8', '#a1a1aa', '#c4b5fd'];
       return (
         <g>
           {cols.map((colColor, cIdx) => {
@@ -666,14 +691,14 @@ function renderMotifArt(unit: CadUnit, stroke: string, accent: string) {
     case 'radial-proav1': {
       return (
         <g>
-          <rect x={x + 12} y={y + 12} width={width - 24} height={height - 24} fill="#0a1612" stroke="#10b981" strokeWidth={1.2} />
-          <text x={x + width / 2} y={y + 36} textAnchor="middle" fill="#10b981" fontSize="8" fontFamily="JetBrains Mono, monospace">
+          <rect x={x + 12} y={y + 12} width={width - 24} height={height - 24} fill="#101015" stroke={hi} strokeWidth={1.2} />
+          <text x={x + width / 2} y={y + 36} textAnchor="middle" fill={hi} fontSize="8" fontFamily="JetBrains Mono, monospace">
             RADIAL PROAV1
           </text>
           <circle cx={x + 40} cy={y + 72} r={8} fill="none" stroke={stroke} strokeWidth={1} />
           <circle cx={x + 74} cy={y + 72} r={8} fill="none" stroke={stroke} strokeWidth={1} />
           <rect x={x + width - 56} y={y + 62} width={28} height={18} fill="none" stroke={accent} strokeWidth={0.9} />
-          <text x={x + width / 2} y={y + height - 24} textAnchor="middle" fill={stroke} fontSize="6.5" fontFamily="JetBrains Mono, monospace">
+          <text x={x + width / 2} y={y + height - 24} textAnchor="middle" fill={sub} fontSize="6.5" fontFamily="JetBrains Mono, monospace">
             GND LIFT · -15dB PAD
           </text>
         </g>
@@ -682,7 +707,7 @@ function renderMotifArt(unit: CadUnit, stroke: string, accent: string) {
 
     default:
       return (
-        <text x={x + 12} y={y + height / 2 + 3} fill={stroke} fontSize="8" fontFamily="JetBrains Mono, monospace">
+        <text x={x + 12} y={y + height / 2 + 3} fill={sub} fontSize="8" fontFamily="JetBrains Mono, monospace">
           {unit.title}
         </text>
       );
@@ -692,10 +717,46 @@ function renderMotifArt(unit: CadUnit, stroke: string, accent: string) {
 export const CadSvgRenderer: React.FC<CadSvgRendererProps> = ({
   blueprint,
   selectedUnitId,
-  onSelectUnit
+  onSelectUnit,
+  traceStages = [],
+  activeTraceStep = null
 }) => {
   const selectedUnit =
     blueprint.units.find((u) => u.id === selectedUnitId) ?? blueprint.units[0];
+
+  const traceByUnitId = new Map<string, SignalTraceStage>();
+  const stagesOnBlueprint = traceStages
+    .filter((st) => st.blueprintId === blueprint.id)
+    .sort((a, b) => a.step - b.step);
+
+  for (const st of stagesOnBlueprint) {
+    traceByUnitId.set(st.unitId, st);
+  }
+
+  // Build sequential intra-blueprint trace flow vectors strictly in purple/white
+  const intraFlowEdges: Array<{
+    from: CadUnit;
+    to: CadUnit;
+    isCurrentSegment: boolean;
+  }> = [];
+
+  for (let i = 0; i < stagesOnBlueprint.length - 1; i++) {
+    const a = stagesOnBlueprint[i];
+    const b = stagesOnBlueprint[i + 1];
+    // Only connect consecutive global steps on this blueprint
+    if (b.step === a.step + 1) {
+      const fromUnit = blueprint.units.find((u) => u.id === a.unitId);
+      const toUnit = blueprint.units.find((u) => u.id === b.unitId);
+      if (fromUnit && toUnit) {
+        intraFlowEdges.push({
+          from: fromUnit,
+          to: toUnit,
+          isCurrentSegment:
+            activeTraceStep === a.step || activeTraceStep === b.step
+        });
+      }
+    }
+  }
 
   // Calculate crisp horizontal elbow leader line from active unit to right inspector edge (x = svgWidth)
   const leaderPoints = (() => {
@@ -728,9 +789,29 @@ export const CadSvgRenderer: React.FC<CadSvgRendererProps> = ({
             strokeWidth="0.7"
           />
         </pattern>
-        <filter id="cad-cyan-glow" x="-10%" y="-10%" width="120%" height="120%">
-          <feDropShadow dx="0" dy="0" stdDeviation="2.5" floodColor="#38bdf8" floodOpacity="0.45" />
+        <filter id="cad-purple-glow" x="-10%" y="-10%" width="120%" height="120%">
+          <feDropShadow dx="0" dy="0" stdDeviation="2.6" floodColor="#9d7cd8" floodOpacity="0.45" />
         </filter>
+        <marker
+          id="trace-arrow-purple"
+          markerWidth="7"
+          markerHeight="7"
+          refX="6"
+          refY="3.5"
+          orient="auto"
+        >
+          <polygon points="0 0.5, 6.5 3.5, 0 6.5" fill="#9d7cd8" />
+        </marker>
+        <marker
+          id="trace-arrow-white"
+          markerWidth="7"
+          markerHeight="7"
+          refX="6"
+          refY="3.5"
+          orient="auto"
+        >
+          <polygon points="0 0.5, 6.5 3.5, 0 6.5" fill="#e4e4e7" />
+        </marker>
       </defs>
 
       {/* Architectural CAD Background Grid */}
@@ -774,7 +855,7 @@ export const CadSvgRenderer: React.FC<CadSvgRendererProps> = ({
         </g>
       )}
 
-      {/* Primary & Secondary 19" Rack Frames */}
+      {/* Primary & Optional Secondary 19" Rack Frames */}
       {blueprint.rackFrame && renderRackFrame(blueprint.rackFrame, 'primary')}
       {blueprint.secondaryRackFrame &&
         renderRackFrame(blueprint.secondaryRackFrame, 'secondary')}
@@ -782,24 +863,50 @@ export const CadSvgRenderer: React.FC<CadSvgRendererProps> = ({
       {/* Interactive Hardware Units */}
       {blueprint.units.map((unit) => {
         const isSelected = unit.id === selectedUnit?.id;
-        const stroke = isSelected ? STROKE_ACTIVE : STROKE_BASE;
-        const accent = isSelected ? STROKE_ACTIVE : STROKE_HOVER;
+        const traceStage = traceByUnitId.get(unit.id);
+        const isTraced = Boolean(traceStage);
+        const isCurrentTraceStep =
+          Boolean(traceStage) && traceStage?.step === activeTraceStep;
+
+        const stroke =
+          isSelected || isCurrentTraceStep
+            ? STROKE_ACTIVE
+            : isTraced
+            ? '#c4b5fd'
+            : STROKE_BASE;
+        const accent =
+          isSelected || isTraced ? WHITE : STROKE_INACTIVE_ACCENT;
 
         return (
           <g
             key={unit.id}
             onClick={() => onSelectUnit(unit.id)}
             className="cursor-pointer group"
-            filter={isSelected ? 'url(#cad-cyan-glow)' : undefined}
+            filter={
+              isSelected || isCurrentTraceStep
+                ? 'url(#cad-purple-glow)'
+                : undefined
+            }
           >
             <rect
               x={unit.x}
               y={unit.y}
               width={unit.width}
               height={unit.height}
-              fill={isSelected ? '#0f1722' : '#121216'}
+              fill={
+                isSelected || isCurrentTraceStep
+                  ? FILL_SELECTED
+                  : isTraced
+                  ? '#14111c'
+                  : '#121216'
+              }
               stroke={stroke}
-              strokeWidth={isSelected ? 1.6 : 1}
+              strokeWidth={
+                isSelected || isCurrentTraceStep ? 1.7 : isTraced ? 1.35 : 1
+              }
+              strokeDasharray={
+                isTraced && !isSelected && !isCurrentTraceStep ? '5 2' : undefined
+              }
               className="transition-colors"
             />
 
@@ -814,21 +921,183 @@ export const CadSvgRenderer: React.FC<CadSvgRendererProps> = ({
             )}
 
             {/* Photo-traced internal CAD line-art motif */}
-            {renderMotifArt(unit, stroke, accent)}
+            {renderMotifArt(unit, stroke, accent, isSelected || isTraced)}
 
             {/* Slot index badge inside left corner */}
             <text
               x={unit.x + 12}
-              y={unit.y + 10}
-              fill={isSelected ? STROKE_ACTIVE : '#71717a'}
-              fontSize="6.5"
+              y={unit.y + (unit.height <= 28 ? 8.5 : 10)}
+              fill={isSelected || isTraced ? STROKE_ACTIVE : '#71717a'}
+              fontSize="6"
               fontFamily="JetBrains Mono, monospace"
             >
               {unit.slotLabel}
             </text>
+
+            {/* Sequential Trace Step Badge (Top-Right Corner of Traced Unit) */}
+            {traceStage && (
+              <g pointerEvents="none">
+                <rect
+                  x={unit.x + unit.width - 24}
+                  y={unit.y + 3}
+                  width={18}
+                  height={14}
+                  fill={isCurrentTraceStep ? '#9d7cd8' : '#181424'}
+                  stroke={isCurrentTraceStep ? WHITE : '#9d7cd8'}
+                  strokeWidth={1}
+                />
+                <text
+                  x={unit.x + unit.width - 15}
+                  y={unit.y + 12.5}
+                  textAnchor="middle"
+                  fill={isCurrentTraceStep ? '#0a0a0a' : WHITE}
+                  fontSize="8"
+                  fontWeight="700"
+                  fontFamily="JetBrains Mono, monospace"
+                >
+                  {traceStage.step}
+                </text>
+              </g>
+            )}
           </g>
         );
       })}
+
+      {/* Signal Flow Trace Directional Connectors (Strictly Purple & White) */}
+      {stagesOnBlueprint.length > 0 && (
+        <g pointerEvents="none">
+          {intraFlowEdges.map((edge, idx) => {
+            const laneX =
+              blueprint.layoutType === 'console-desk'
+                ? (edge.from.x + edge.from.width / 2 + edge.to.x + edge.to.width / 2) / 2
+                : Math.min(edge.from.x, edge.to.x) - 14 - (idx % 2) * 8;
+
+            const startX =
+              blueprint.layoutType === 'console-desk'
+                ? edge.from.x + edge.from.width / 2
+                : edge.from.x;
+            const startY = edge.from.y + edge.from.height / 2;
+            const endX =
+              blueprint.layoutType === 'console-desk'
+                ? edge.to.x + edge.to.width / 2
+                : edge.to.x;
+            const endY = edge.to.y + edge.to.height / 2;
+
+            const pathD =
+              blueprint.layoutType === 'console-desk'
+                ? `M ${startX} ${startY} L ${laneX} ${(startY + endY) / 2} L ${endX} ${endY}`
+                : `M ${startX} ${startY} L ${laneX} ${startY} L ${laneX} ${endY} L ${endX - 2} ${endY}`;
+
+            return (
+              <path
+                key={`trace-edge-${edge.from.id}-${edge.to.id}`}
+                d={pathD}
+                fill="none"
+                stroke={edge.isCurrentSegment ? WHITE : STROKE_ACTIVE}
+                strokeWidth={edge.isCurrentSegment ? 2.1 : 1.5}
+                strokeDasharray={edge.isCurrentSegment ? undefined : '4 2'}
+                markerEnd={
+                  edge.isCurrentSegment
+                    ? 'url(#trace-arrow-white)'
+                    : 'url(#trace-arrow-purple)'
+                }
+                filter="url(#cad-purple-glow)"
+              />
+            );
+          })}
+
+          {/* Inter-Rack Entry / Exit Flow Annotations */}
+          {stagesOnBlueprint.map((st) => {
+            const unit = blueprint.units.find((u) => u.id === st.unitId);
+            if (!unit) return null;
+            const midY = unit.y + unit.height / 2;
+            const isActive = st.step === activeTraceStep;
+            const lineColor = isActive ? WHITE : STROKE_ACTIVE;
+
+            return (
+              <g key={`io-vec-${st.step}`}>
+                {st.linkInLabel && (
+                  <g>
+                    <line
+                      x1={Math.max(8, unit.x - 42)}
+                      y1={midY}
+                      x2={unit.x - 3}
+                      y2={midY}
+                      stroke={lineColor}
+                      strokeWidth={1.6}
+                      markerEnd={
+                        isActive
+                          ? 'url(#trace-arrow-white)'
+                          : 'url(#trace-arrow-purple)'
+                      }
+                    />
+                    <rect
+                      x={4}
+                      y={midY - 14}
+                      width={Math.min(130, st.linkInLabel.length * 4.5 + 10)}
+                      height={11}
+                      fill="#0a0a0a"
+                      stroke="#9d7cd8"
+                      strokeWidth={0.7}
+                    />
+                    <text
+                      x={8}
+                      y={midY - 6}
+                      fill={WHITE}
+                      fontSize="5.5"
+                      fontFamily="JetBrains Mono, monospace"
+                    >
+                      {st.linkInLabel}
+                    </text>
+                  </g>
+                )}
+
+                {st.linkOutLabel && (
+                  <g>
+                    <line
+                      x1={unit.x + unit.width}
+                      y1={midY + (st.unitId === selectedUnit?.id ? 10 : 0)}
+                      x2={Math.min(blueprint.svgWidth - 8, unit.x + unit.width + 66)}
+                      y2={midY + (st.unitId === selectedUnit?.id ? 10 : 0)}
+                      stroke={lineColor}
+                      strokeWidth={1.6}
+                      markerEnd={
+                        isActive
+                          ? 'url(#trace-arrow-white)'
+                          : 'url(#trace-arrow-purple)'
+                      }
+                    />
+                    <rect
+                      x={Math.min(
+                        blueprint.svgWidth - 134,
+                        unit.x + unit.width + 8
+                      )}
+                      y={midY + (st.unitId === selectedUnit?.id ? 14 : 4)}
+                      width={Math.min(126, st.linkOutLabel.length * 4.5 + 10)}
+                      height={11}
+                      fill="#0a0a0a"
+                      stroke={st.isSpeakerExit ? WHITE : '#9d7cd8'}
+                      strokeWidth={0.8}
+                    />
+                    <text
+                      x={Math.min(
+                        blueprint.svgWidth - 130,
+                        unit.x + unit.width + 12
+                      )}
+                      y={midY + (st.unitId === selectedUnit?.id ? 22 : 12)}
+                      fill={st.isSpeakerExit ? WHITE : '#c4b5fd'}
+                      fontSize="5.5"
+                      fontFamily="JetBrains Mono, monospace"
+                    >
+                      {st.linkOutLabel}
+                    </text>
+                  </g>
+                )}
+              </g>
+            );
+          })}
+        </g>
+      )}
 
       {/* Horizontal Elbow Leader Line Connecting Selected Hardware Unit to Inspector Panel */}
       {selectedUnit && leaderPoints && (
@@ -836,7 +1105,7 @@ export const CadSvgRenderer: React.FC<CadSvgRendererProps> = ({
           <polyline
             points={leaderPoints}
             fill="none"
-            stroke="#38bdf8"
+            stroke={STROKE_ACTIVE}
             strokeWidth={1.6}
             strokeDasharray="4 2"
           />
@@ -844,16 +1113,17 @@ export const CadSvgRenderer: React.FC<CadSvgRendererProps> = ({
             cx={selectedUnit.x + selectedUnit.width}
             cy={selectedUnit.y + selectedUnit.height / 2}
             r={3.5}
-            fill="#38bdf8"
+            fill={STROKE_ACTIVE}
           />
           <circle
             cx={blueprint.svgWidth - 3}
             cy={selectedUnit.y + selectedUnit.height / 2}
             r={3}
-            fill="#38bdf8"
+            fill={STROKE_ACTIVE}
           />
         </g>
       )}
     </svg>
   );
 };
+

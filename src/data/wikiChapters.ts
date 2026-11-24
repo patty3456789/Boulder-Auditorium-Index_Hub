@@ -538,6 +538,80 @@ export const WIKI_CHAPTERS: WikiChapter[] = [
         resolution: 'Wake the Crestron Touchpanel in FOH Rack 01 (U22–U25), select "Show / FOH Console Mode", and verify House Audio is unmuted.'
       }
     ]
+  },
+  {
+    id: 'x32-pro-automation-expansions',
+    category: 'automation & expansion',
+    title: 'X32 Pro Automation, Assignable Controls & Expansion Cards',
+    summary:
+      'High-efficiency booth techniques drawn directly from the Behringer X32 manual: DCA Spills, 6 Mute Groups, 36 User Assignable controls, Snippets, Cue Lists with SKIP, MIDI/OSC control, Ducker/Key Filter tricks, and 32x32 Expansion Cards.',
+    manualRef: 'Behringer X32 Manual · Sections 5.4, 5.5, 6.2, 6.6–6.12 & Appendices (p. 28–42, 53–73)',
+    paragraphs: [
+      'Most crews use less than half of the Behringer X32 automation surface. Beyond TheatreMix DCA assignments, the X32 hardware provides native speed tools that slash button-mashing during fast assemblies, choral concerts, and tech week: DCA Spills, 6 global Mute Groups with hardware safety lockout, 3 user-switchable banks of 12 Assignable controls (36 total shortcuts), surgical Snippets inside unified Cue Lists, and single-cable MIDI/OSC synchronization.',
+      'Hold [SELECT] on any DCA Group 1–8 to trigger DCA Spill: the left 16 input fader bank temporarily populates ONLY the channels assigned to that DCA (no matter whether they live on Ch 1–16, 17–32, or Aux Returns). Releasing [SELECT] or switching fader layers restores your standard patch instantly. You can also switch the right fader bank to Layer 4 (Bus Masters 1–8 and 9–16) and assign a Bus Master into a DCA—for example grouping Drum Aux or Pit Monitors onto one master DCA.',
+      'For rapid stage transitions and speech emergencies, the X32’s 6 Mute Groups sit in the bottom-right [MUTE GRP] cluster (below the Assign section). Assigning "All Wireless Cast 1–25" to Mute Group 1, "Pit & Band Inputs" to Mute Group 2, and "House Playback + Walk-In" to Mute Group 3 lets an operator kill an entire section with one thumb press. Enable [SETUP > GLOBAL > Mute Grp] protection so an individual channel cannot accidentally unmute when its master Mute Group is engaged.',
+      'The [ASSIGN] section gives you Sets A, B, and C—each offering 4 encoders and 8 illuminated pushbuttons (36 programmable hardware controls total). Map Set A for live show mixing (Buttons 5–8 -> Cue Prev, Cue Next, Go, Talkback Dim; Encoders -> Reverb Decay, Tap Delay Feedback, House Sub Bus, Dressing Cue Volume), Set B for soundcheck (Oscillator Enable, USB Recorder Start/Pause, RTA Overlay), and Set C for Black Box / Assemblies. Pro manual shortcut: hold [SET] + press any Assign Button to jump the 7-inch TFT straight to that target page (Jump-to-Page macro).',
+      'Inside [SCENES], the X32 separates full-console Scenes from Snippets (tiny partial snapshots of 1–32 channels or specific EQ/Send/Fader blocks) and integrates both into a master Cue List (up to 500 Cue entries). Using the SKIP command in the Cue List lets you hide alternate cast cues or dry-tech test cues without deleting them, while the 4-column Parameter Safes and 6-column Channel Safes guarantee that recalling Cue 42 never wipes out the director’s God Mic level or live pit preamp trims.',
+      'Underused built-in X32 DSP tools solve common Boulder Auditorium headaches with zero outboard gear: switch any channel Gate into DUCKER mode keyed to the God Mic or Principal Podium so intermission playback automatically ducks -15 dB whenever someone speaks; enable Dynamics KEY FILTER (high-pass/band-pass sidechain EQ) on vocal lavaliers to build a zero-latency de-esser around 6–7 kHz; turn on [SETUP > CONFIG] Solo Follows Select & Select Follows Solo so clicking a channel solo immediately updates the top Channel Strip; engage Talkback Auto-Dim so your nearfield Genelecs drop cleanly when calling backstage; and toggle USB Recorder [PLAYBACK FOLDER] to isolate show SFX cues from walk-in house playlists.',
+      'Finally, the rear expansion slot ships with the 32x32 X-USB card (capable of 32/32, 16/16, 8/8, or 2/2 channel modes—16/16 is ideal for low-latency multitrack overdubs). Swapping or upgrading to X-DANTE feeds 32 bidirectional channels directly into our Q-SYS Core 110f and FOH Rack 02 Atmos AV network over Cat6; X-LIVE records 32 channels directly onto dual SD cards for laptop-free Virtual Soundcheck; X-ADAT / X-MADI bridge broadcast trucks; and X-WAVES adds SoundGrid plugin racks.'
+    ],
+    walkthroughs: [
+      {
+        heading: 'Setting Up DCA Spill, Mute Group Safety & Assignable Sets A/B/C',
+        steps: [
+          'Press and HOLD [SELECT] on any DCA (1–8) to inspect or tweak its member channels on the left fader bank (DCA Spill)—release or press another layer button to exit.',
+          'Hold a [MUTE GRP 1–6] button while pressing [SELECT] on every input channel that belongs to that group (e.g., Mute Group 1 = Ch 1–25 Cast Wireless); enable [SETUP > GLOBAL > Mute Grp] to prevent accidental unmuting.',
+          'Press [VIEW] in the [ASSIGN] block -> pick Set A, B, or C -> turn Encoders 1–6 to assign Jump-to-Page, MIDI Push, Snippet Recall, FX Mute, or Bus Send targets onto Buttons 5–12.',
+          'Test the Jump-to-Page macro live: hold [SET] and tap any configured Assign button to warp the main TFT directly to that target bus, FX rack, or routing tab.'
+        ]
+      },
+      {
+        heading: 'Building a Zero-Risk Cue List with Snippets, SKIP & Safes',
+        steps: [
+          'Press [VIEW] in the [SCENES] section -> navigate to the [SNIPPETS] tab -> select ONLY the specific parameter filters (e.g., Faders + Mutes on Ch 1–12) and hit [SAVE] to create a surgical Snippet that leaves Gain/EQ untouched.',
+          'Open the [CUES] tab -> insert sequential Cue rows referencing either a full [SCENE] or a surgical [SNIPPET] for each Act/Scene beat.',
+          'Set Parameter Safes (4 columns: Console Config, Routing, Out Patch, Talk/Osc) and Channel Safes (6 columns: HA/Preamp, EQ, Dyn, Inserts, Sends, Fader/Mute) so live wireless gains and God Mic stay immune during Cue recalls.',
+          'Highlight any alternate-cast or rehearsal-only cue row and toggle [SKIP] so pressing [NEXT / GO] during performance jumps cleanly over unused entries.'
+        ]
+      },
+      {
+        heading: 'Enabling 2-Scene Virtual Soundcheck, MIDI Automation & Ducker Magic',
+        steps: [
+          'For Virtual Soundcheck, store Scene 98 with [ROUTING > HOME] Inputs 1–32 set to "Local 1–32" (or AES50) and Scene 99 with Inputs 1–32 set to "Card 1–32" (X-USB / X-LIVE playback), safing all faders/EQ so toggling Scenes flips instantaneously between live mics and multitrack.',
+          'For MIDI show control (lighting console or QLab triggering X32 cues): open [SETUP > GLOBAL], enable [MIDI In/Out] (via 5-pin DIN, X-USB, or S16 AES50), set Console MIDI Receive Ch 01, and send Program Change 1–100; turn OFF [Confirm Pop-Ups / Scene Load] so automated changes fire immediately without dialog stalls.',
+          'To auto-duck walk-in music behind announcements: select Playback Ch 31–32 -> press [GATE VIEW] -> rotate Mode encoder to [DUCKER] -> set Key Source to God Mic / Podium channel -> dial Range to -15 dB and Release to 800 ms.'
+        ]
+      }
+    ],
+    whyItMatters: {
+      title: 'Why Hardware Automation Beats Panic Clicking',
+      body: 'During a fast musical cue sequence or live assembly, digging through 40 channels or confirmation pop-ups costs 5–10 missed seconds of audio. Pre-programming DCA Spills, Mute Group locks, Assignable Sets A/B/C, and surgical Snippets turns complex multi-bus moves into single deterministic button presses.'
+    },
+    specsTable: [
+      { label: 'User Assignable Controls', value: '3 Sets (A / B / C) × 12 Controls (4 Rotary + 8 Buttons) = 36 Macros' },
+      { label: 'Cue List Capacity', value: '500 Cues · 100 Scenes · 100 Snippets (with SKIP & Parameter/Channel Safes)' },
+      { label: 'Mute Groups', value: '6 Global Groups (Protected via [SETUP > GLOBAL > Mute Grp])' },
+      { label: 'MIDI Scene Automation', value: 'Program Change 1–100 on Ch 01 (DIN, X-USB, or AES50 Stagebox) + OSC Port 10023' },
+      { label: 'X-USB Card Modes', value: '32 In / 32 Out · 16 In / 16 Out · 8/8 · 2/2 (44.1 / 48 kHz)' },
+      { label: 'Expansion Slot Options', value: 'X-USB (Installed) · X-DANTE (AoIP) · X-LIVE (Dual SD) · X-ADAT · X-MADI · X-WAVES' }
+    ],
+    troubleshooting: [
+      {
+        symptom: 'Cue List automated via MIDI or QLab refuses to load the next Scene/Snippet and pauses on screen.',
+        cause: '"Confirm Pop-Ups -> Scene Load" is still checked in [SETUP > GLOBAL], waiting for a manual Confirm tap.',
+        resolution: 'Open [SETUP > GLOBAL], uncheck Scene Load confirmation pop-ups, and verify MIDI RX Channel matches your trigger source.'
+      },
+      {
+        symptom: 'Virtual Soundcheck playback plays into X32 meters, but live cast mics stop working when actors walk out.',
+        cause: 'Console [ROUTING > HOME] was left on "Card 1–32" instead of returning to "Local 1–32" (or AES50 A1–32).',
+        resolution: 'Recall your saved Live Input routing preset (or flip Inputs 1–32 back to Local 1–32 in [ROUTING > HOME]) before opening the house.'
+      },
+      {
+        symptom: 'Channel unmute button flashes and refuses to pass audio even though the fader is at 0 dB.',
+        cause: 'Channel is locked inside an active [MUTE GRP 1–6] while [SETUP > GLOBAL > Mute Grp] safety override is active.',
+        resolution: 'Check the bottom-right [MUTE GRP] 1–6 LEDs and release the lit Master Mute Group rather than forcing individual strip mutes.'
+      }
+    ]
   }
 ];
 

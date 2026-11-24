@@ -165,28 +165,28 @@ export const SYSTEM_DB: SystemAsset[] = [
   },
   {
     id: 'SR-COM-01',
-    name: 'Stage Right Audio & Intercom Rack (Clear-Com, XLS, iNUKE, S16)',
+    name: 'Stage Right Audio & Intercom Bay (Clear-Com, XLS, iNUKE, S16/S32)',
     type: 'Stage Infrastructure',
     location: 'Stage Right Wing',
-    rackPosition: 'Portable Floor Rack Stack (Under Servoreeler & Stagebox)',
+    rackPosition: 'Unified 34U Stage Right Rack · Lower Bay U1–U15 (SR-L Bottom 3U Patches)',
     signalPath: {
       input: 'FOH Aux/Matrix Feeds + Behringer S16/S32 Digital Stagebox AES50',
       output: 'Clear-Com Partyline/Wireless DX210, On-Stage Foldback & Dressing Room Cue Feeds'
     },
-    terminalRouting: 'Stage Right Wall Patch + Shielded Cat-5e Ethercon to FOH',
+    terminalRouting: 'SR-L Bottom 3U XLR Patches + Shielded Cat-5e Ethercon to FOH',
     metadata: {
       status: 'Active',
       category: 'Stage Right Rack',
       managedBy: 'Audio Team / Stage Crew',
-      notes: 'Stacks Clear-Com MS-702 Encore, HME DX210 wireless comms, Crown XLS1000 (STEREO BYPASS), 3x Behringer iNUKE NU1000, and Behringer S16/S32.'
+      notes: 'Lower half (U1–U15) of the unified 34U Stage Right rack: Servoreeler SRC, Clear-Com MS-702 Encore, HME DX210 wireless comms, Crown XLS1000 (STEREO BYPASS), 3x Behringer iNUKE NU1000, and bottom 3U Behringer S16/S32 patches.'
     }
   },
   {
     id: 'SR-RIG-01',
-    name: 'Stage Right Rigging & Video Rack (ETC QuickTouch, Marshall, Crestron)',
+    name: 'Stage Right Rigging & Video Bay (ETC QuickTouch, Marshall, Crestron)',
     type: 'Rigging & Control',
     location: 'Stage Right Wing',
-    rackPosition: 'Vertical Enclosure Adjacent to Stage Right Audio Stack',
+    rackPosition: 'Unified 34U Stage Right Rack · Upper Bay U16–U34 (ETC QuickTouch on Top)',
     signalPath: {
       input: 'Building Rigging Control Bus + Stage Camera / AV Network',
       output: 'Automated Fly-System Controller + Stage Wing Preview & Touch Interface'
@@ -196,7 +196,7 @@ export const SYSTEM_DB: SystemAsset[] = [
       status: 'Active',
       category: 'Stage Right Rack',
       managedBy: 'Technical Director / Stage Crew',
-      notes: 'Houses locked 7U ETC QuickTouch Rigging Controller above secondary touchpanel, Marshall Dual LCD monitor, and lower Crestron screen.'
+      notes: 'Upper half (U16–U34) of the unified 34U Stage Right rack: top Furman conditioner, locked 7U ETC QuickTouch Rigging Controller, upper touchpanel, Marshall Dual LCD monitor, and lower Crestron screen.'
     }
   },
   {

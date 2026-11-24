@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { Search } from 'lucide-react';
 import { SYSTEM_DB } from '../data/systemDb';
 import { SystemAsset } from '../types';
+import { GlossaryText } from './GlossaryText';
 
 const CATEGORIES: Array<'All' | SystemAsset['metadata']['category']> = [
   'All',
@@ -143,7 +144,7 @@ export const DatabaseView: React.FC = () => {
                             ? 'text-emerald-400'
                             : asset.metadata.status === 'Seasonal'
                             ? 'text-amber-400'
-                            : 'text-[#38bdf8]'
+                            : 'text-[#9d7cd8]'
                         }
                       >
                         {asset.metadata.status.toLowerCase()}
@@ -178,28 +179,36 @@ export const DatabaseView: React.FC = () => {
                   <div className="text-[11px] uppercase tracking-wider text-zinc-500">
                     physical rack / bay
                   </div>
-                  <div className="mt-1 text-zinc-200">{activeAsset.rackPosition}</div>
+                  <div className="mt-1 text-zinc-200">
+                    <GlossaryText text={activeAsset.rackPosition} />
+                  </div>
                 </div>
 
                 <div className="border border-zinc-800 bg-[#0a0a0a] p-3">
                   <div className="text-[11px] uppercase tracking-wider text-zinc-500">
                     signal input
                   </div>
-                  <div className="mt-1 text-zinc-200">{activeAsset.signalPath.input}</div>
+                  <div className="mt-1 text-zinc-200">
+                    <GlossaryText text={activeAsset.signalPath.input} />
+                  </div>
                 </div>
 
                 <div className="border border-zinc-800 bg-[#0a0a0a] p-3">
                   <div className="text-[11px] uppercase tracking-wider text-zinc-500">
                     signal output
                   </div>
-                  <div className="mt-1 text-zinc-200">{activeAsset.signalPath.output}</div>
+                  <div className="mt-1 text-zinc-200">
+                    <GlossaryText text={activeAsset.signalPath.output} />
+                  </div>
                 </div>
 
                 <div className="border border-zinc-800 bg-[#0a0a0a] p-3">
                   <div className="text-[11px] uppercase tracking-wider text-zinc-500">
                     terminal patch / interconnect
                   </div>
-                  <div className="mt-1 text-[#38bdf8]">{activeAsset.terminalRouting}</div>
+                  <div className="mt-1 text-[#9d7cd8]">
+                    <GlossaryText text={activeAsset.terminalRouting} />
+                  </div>
                 </div>
               </div>
 
@@ -208,7 +217,7 @@ export const DatabaseView: React.FC = () => {
                   operational notes · managed by {activeAsset.metadata.managedBy}
                 </div>
                 <p className="text-xs leading-relaxed text-zinc-300">
-                  {activeAsset.metadata.notes}
+                  <GlossaryText text={activeAsset.metadata.notes} />
                 </p>
               </div>
             </div>

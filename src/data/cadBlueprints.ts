@@ -23,7 +23,7 @@ export const CAD_BLUEPRINTS: CadBlueprint[] = [
       width: 340,
       height: 928,
       totalU: 42,
-      label: 'FOH RACK 01 (42U // AE DESIGN + FORD AV)'
+      label: 'FOH RACK 01 (42U · AE DESIGN + FORD AV)'
     },
     units: [
       {
@@ -674,213 +674,37 @@ export const CAD_BLUEPRINTS: CadBlueprint[] = [
   },
   {
     id: 'stage-right-racks',
-    tabLabel: 'stage right racks',
-    title: 'Stage Right Wing · Audio/Comms Stack & Rigging Bay',
-    subtitle: 'Traced Dual-Bay Elevation · Clear-Com MS-702 / DX210, Crown XLS, 3x iNUKE NU1000, S16 Stagebox & ETC QuickTouch',
+    tabLabel: 'stage right rack',
+    title: 'Stage Right Wing · Unified 34U Audio, Comms & Rigging Rack',
+    subtitle: 'Traced Single-Rack Elevation · ETC QuickTouch Top Rigging Bay down through Clear-Com, iNUKE & SR-L Bottom 3U Patches',
     location: 'Stage Right Wing',
-    referencePhoto: './assets/aistudio/IMG_6036__2__6f6ae340.jpg',
-    referencePhotoAlt: 'Stage Right rack showing Servoreeler, Clear-Com MS-702, Clear-Com HME DX210, Crown XLS1000, 3x Behringer iNUKE NU1000 amps, and S16 stagebox',
+    referencePhoto: './assets/aistudio/IMG_6037__2__c20b29d9.jpg',
+    referencePhotoAlt: 'Unified Stage Right 34U rack from Furman and ETC QuickTouch on top down to Servoreeler, Clear-Com MS-702, DX210, Crown XLS1000, 3x iNUKE, and bottom 3U S16/S32 patches',
     svgWidth: 560,
-    svgHeight: 680,
-    layoutType: 'dual-rack',
+    svgHeight: 980,
+    layoutType: 'single-rack',
     rackFrame: {
-      x: 38,
-      y: 34,
-      width: 224,
-      height: 610,
-      totalU: 16,
-      label: 'SR AUDIO & COMMS RACK'
-    },
-    secondaryRackFrame: {
-      x: 298,
-      y: 34,
-      width: 224,
-      height: 610,
-      totalU: 19,
-      label: 'SR RIGGING & CONTROL RACK'
+      x: 70,
+      y: 24,
+      width: 340,
+      height: 928,
+      totalU: 34,
+      label: 'STAGE RIGHT UNIFIED RACK (34U)'
     },
     units: [
       {
-        id: 'sr-servoreeler',
-        assetId: 'SR-COM-01',
-        slotLabel: 'SR-L Top (2U)',
-        title: 'Servoreeler Systems SRC Interface Controller',
-        model: 'Xedit Corp SRC 24VDC Motorized Reel Controller',
-        summary:
-          'Top-mounted motorized cable/mic reel power controller with illuminated master amber power switch on the left and green RETRACT / red DEPLOY pushbuttons on the right.',
-        motif: 'servoreeler-src',
-        x: 48,
-        y: 48,
-        width: 204,
-        height: 54,
-        rackUnits: 2,
-        tags: ['SERVOREELER', 'RETRACT / DEPLOY'],
-        signalPath: {
-          input: '120V AC -> 24VDC 8.4A Internal Power Supply',
-          processing: 'Dual 3A 4A-SB Fuse Protection & Rear Speed Trims',
-          output: 'Motorized Overhead Sanctuary / Stage Choir Mic Drop Reels'
-        },
-        powerAndClock: 'Switch off master key/rocker when overhead reels are not in production.',
-        specs: [
-          'Green RETRACT raises ceiling cable reels cleanly',
-          'MASTER + red DEPLOY lowers mic drops to pre-calibrated trim stops',
-          'Never hold DEPLOY past lower limit stop'
-        ],
-        photoPath: './assets/aistudio/IMG_6036__2__6f6ae340.jpg'
-      },
-      {
-        id: 'sr-clearcom-ms702',
-        assetId: 'SR-COM-01',
-        slotLabel: 'SR-L 1U',
-        title: 'Clear-Com MS-702 Encore Dual-Channel Master',
-        model: 'Clear-Com MS-702 2-Channel Partyline Master Station (1U)',
-        summary:
-          'Hardwired backstage intercom master featuring 1/4" Panel Mic, 4-pin XLR Headset jack, Channel A & B Talk/Call/Volume controls, Partyline Link LED, Announce, and right speaker louvers.',
-        motif: 'clearcom-ms702',
-        x: 48,
-        y: 106,
-        width: 204,
-        height: 36,
-        rackUnits: 1,
-        tags: ['CLEAR-COM MS-702', 'CH A / CH B'],
-        signalPath: {
-          input: 'Panel/Headset Mic + Stage Beltpacks (XLR-3 Partyline Ch A & B)',
-          processing: 'Internal 30V DC Partyline Power & Sidetone Null Trim',
-          output: 'Stage Right, Booth, Spotlights & Fly-Rail Hardwired Beltpacks'
-        },
-        powerAndClock: 'Verify amber Partyline Link LED matches SM call channel configuration.',
-        specs: [
-          'Allows Stage Manager to address Ch A (Audio/LX) and Ch B (Deck/Fly) separately or linked',
-          'Remote Mic Kill button silences open stage headsets quickly during quiet scenes',
-          'Program level rotary knob blends house stage audio onto beltpack ears'
-        ],
-        photoPath: './assets/aistudio/IMG_6036__2__6f6ae340.jpg'
-      },
-      {
-        id: 'sr-clearcom-dx210',
-        assetId: 'SR-COM-01',
-        slotLabel: 'SR-L 1U',
-        title: 'Clear-Com HME DX210 Wireless Intercom Base',
-        model: 'Clear-Com HME DX210 Digital 2.4 GHz Base Station (1U)',
-        summary:
-          'Wireless beltpack transceiver integrated directly with the MS-702 partyline via 2-Wire/4-Wire matrix controls, featuring CLR/BND registration LED display, Aux In/Out, and Headset Talk controls.',
-        motif: 'clearcom-dx210',
-        x: 48,
-        y: 146,
-        width: 204,
-        height: 36,
-        rackUnits: 1,
-        tags: ['HME DX210', '2.4 GHz'],
-        signalPath: {
-          input: 'Clear-Com MS-702 2W Partyline + 2.4GHz Wireless Headsets (IC1/IC2)',
-          processing: 'Digital Spread Spectrum Encryption & Echo Cancellation',
-          output: 'Full-Duplex Roving Stage Crew & Followspot Comms'
-        },
-        powerAndClock: 'Use CLR/BND button only if pairing a replacement wireless beltpack.',
-        specs: [
-          'Bridges IC1/IC2 wireless groups cleanly into hardwired Ch A/B',
-          'Inspect 2W Input/Output null pots only during initial seasonal setup',
-          'Avoid placing Wi-Fi routers directly beside DX210 rear dipole antennas'
-        ],
-        photoPath: './assets/aistudio/IMG_6036__2__6f6ae340.jpg'
-      },
-      {
-        id: 'sr-crown-xls',
-        assetId: 'SR-COM-01',
-        slotLabel: 'SR-L 2U',
-        title: 'Crown XLS1000 DriveCore Amplifier',
-        model: 'Crown XLS1000 High-Density Amplifier (2U Silver Faceplate)',
-        summary:
-          'Distinctive silver-chassis 2U DriveCore amp reading "STEREO BYPASS" on its center glowing cyan LCD, flanked by CH1/CH2 notched level dials and honeycomb ventilation grille.',
-        motif: 'crown-xls1000',
-        x: 48,
-        y: 186,
-        width: 204,
-        height: 64,
-        rackUnits: 2,
-        tags: ['XLS1000', 'STEREO BYPASS'],
-        signalPath: {
-          input: 'FOH Stage Monitor Aux / Stage Right Submix',
-          processing: 'DriveCore Class-D Switching (STEREO BYPASS Active)',
-          output: 'On-Stage Monitor Feeds / Side-Fill Reinforcement'
-        },
-        powerAndClock: 'Verify cyan LCD reads STEREO BYPASS and Ch1/Ch2 green signal LEDs react.',
-        specs: [
-          'Ch1 & Ch2 gain pots set for balanced stage foldback without acoustic bleed',
-          'Power switch bottom-right glowing blue LED when online',
-          'Zero-latency PureBand crossover available via LCD MODE/MENU if needed'
-        ],
-        photoPath: './assets/aistudio/IMG_6036__2__6f6ae340.jpg'
-      },
-      {
-        id: 'sr-inuke-trio',
-        assetId: 'SR-COM-01',
-        slotLabel: 'SR-L 6U (3x 2U)',
-        title: '3x Behringer iNUKE NU1000 Foldback & Dressing Amps',
-        model: '3x Behringer iNUKE NU1000 Ultra-Lightweight Amps',
-        summary:
-          'Signature curved silver ear-handle trio with glowing amber rotary detents and central status LCDs. Drives on-stage wedges and understage dressing room actor cue monitors.',
-        motif: 'behringer-inuke',
-        x: 48,
-        y: 254,
-        width: 204,
-        height: 184,
-        rackUnits: 6,
-        tags: ['3x iNUKE NU1000', 'UNDERSTAGE CUES'],
-        signalPath: {
-          input: 'Behringer S16 Stagebox Outputs / Stage Foldback Sends',
-          processing: 'Stereo Dual-Channel High-Density Class-D Amplification',
-          output: 'On-Stage Foldback Wedges & Understage Dressing Room Speakers'
-        },
-        powerAndClock: 'Amber collars illuminate when active; confirm online before 4:45 PM actor call.',
-        specs: [
-          'CRITICAL FOR MUSICALS: Understage actors miss entrances if iNUKEs stay powered down',
-          'Top-to-bottom stacked amps 1–3 map across floor wedges & dressing zones',
-          'Check orange clip LEDs only flash momentarily during loudest chorus numbers'
-        ],
-        photoPath: './assets/aistudio/IMG_6036__2__6f6ae340.jpg'
-      },
-      {
-        id: 'sr-s16-stagebox',
-        assetId: 'SR-COM-01',
-        slotLabel: 'SR-L Bottom 3U',
-        title: 'Behringer S16 / S32 Digital Stagebox',
-        model: 'AES50 Digital Stagebox (Dual XLR Input Rows + 8 XLR Outputs)',
-        summary:
-          'Bottom 3U digital snake box connecting wired stage mics, floor sub-snakes, and pit spots via rear XLR-in banks (lower 16 plugged bottom row), routing back to FOH over SuperMAC AES50.',
-        motif: 'behringer-s16',
-        x: 48,
-        y: 442,
-        width: 204,
-        height: 92,
-        rackUnits: 3,
-        tags: ['STAGEBOX', 'AES50 +16 OUT'],
-        signalPath: {
-          input: 'Wired Stage Microphones, Choir Mics & Pit Spot Inputs',
-          processing: '24-Bit/48kHz MIDAS Remote-Controllable Preamps',
-          output: 'Balanced Monitor XLRs -> iNUKEs + Shielded Cat-5e AES50 Trunk -> FOH X32'
-        },
-        powerAndClock: 'Verify green AES50-A clock sync LED lock on right panel edge.',
-        specs: [
-          'Accepts remote gain & +48V changes directly from FOH X32 console',
-          'Maximum AES50 run: 100 meters via shielded Ethercon Cat-5e only',
-          'Notice white-taped XLR inputs populated on lower input rows'
-        ],
-        photoPath: './assets/aistudio/IMG_6036__2__6f6ae340.jpg'
-      },
-      {
         id: 'sr-rig-furman',
         assetId: 'SR-RIG-01',
-        slotLabel: 'SR-R Top 1U',
-        title: 'Stage Right Control Rack Conditioner',
+        slotLabel: 'U34 (Top 1U)',
+        title: 'Stage Right Rack Top Power Conditioner',
         model: 'Furman Power Conditioner (1U)',
         summary:
-          'Upper power rail supplying surge protection and front service outlet for the Stage Right rigging & preview rack.',
+          'Top 1U power rail supplying surge protection and front service outlet for the unified Stage Right rigging, touchpanel, and intercom stack.',
         motif: 'furman-m8x2',
-        x: 308,
-        y: 48,
-        width: 204,
-        height: 32,
+        x: 92,
+        y: 36,
+        width: 296,
+        height: 26,
         rackUnits: 1,
         tags: ['SR POWER', '1U'],
         signalPath: {
@@ -888,27 +712,27 @@ export const CAD_BLUEPRINTS: CadBlueprint[] = [
           processing: 'Surge Conditioning & Front Convenience Receptacle',
           output: 'Feeds ETC QuickTouch, Touchpanels & Marshall Stage Monitor'
         },
-        powerAndClock: 'Check green protection indicator on right panel.',
+        powerAndClock: 'Verify protection status indicator on right panel before powering rigging or amps.',
         specs: [
-          'Pull-out dual gooseneck illumination knobs',
-          'Supplies clean AC to rigging & video stack independently of audio amps',
-          'Do not overload front outlet with stage lighting dimmer packs'
+          'Pull-out dual gooseneck illumination knobs for dark wing operation',
+          'Supplies clean AC to rigging & video stack at top of the 34U rack',
+          'Do not plug stage lighting dimmer packs into front convenience outlet'
         ],
         photoPath: './assets/aistudio/IMG_6037__2__c20b29d9.jpg'
       },
       {
         id: 'sr-etc-quicktouch',
         assetId: 'SR-RIG-01',
-        slotLabel: 'SR-R 7U',
+        slotLabel: 'U27–U33 (7U)',
         title: 'ETC QuickTouch Rigging Controller Enclosure',
         model: 'ETC QuickTouch Automated Batten / Rigging Cabinet (7U)',
         summary:
-          'Large matte-black 7U locked steel cabinet with vertical piano hinge and key cylinder at bottom-left, controlling powered stage rigging battens.',
+          'Upper matte-black 7U locked steel cabinet with vertical piano hinge and key cylinder at bottom-left, controlling powered stage rigging battens.',
         motif: 'etc-quicktouch',
-        x: 308,
-        y: 84,
-        width: 204,
-        height: 174,
+        x: 92,
+        y: 64,
+        width: 296,
+        height: 184,
         rackUnits: 7,
         tags: ['ETC QUICKTOUCH', 'KEY LOCKED'],
         signalPath: {
@@ -920,23 +744,23 @@ export const CAD_BLUEPRINTS: CadBlueprint[] = [
         specs: [
           'Safety interlock key prevents unauthorized batten travel during rehearsals',
           'Clear underneath stage area completely before opening door',
-          'Audio choir mic reels operate separately via Servoreeler SRC controller'
+          'Audio choir mic reels operate separately via Servoreeler SRC below'
         ],
         photoPath: './assets/aistudio/IMG_6037__2__c20b29d9.jpg'
       },
       {
         id: 'sr-touch-mid',
         assetId: 'SR-RIG-01',
-        slotLabel: 'SR-R 4U',
+        slotLabel: 'U23–U26 (4U)',
         title: 'Stage Wing System Control Touchscreen',
         model: 'Flush 4U Stage Control Touch Bezel',
         summary:
-          'Middle 4U wide textured steel panel housing the recessed stage-wing touchscreen interface for local house/worklight cues.',
+          'Upper-middle 4U textured steel panel housing the recessed stage-wing touchscreen interface for local house and worklight presets.',
         motif: 'crestron-touch',
-        x: 308,
-        y: 262,
-        width: 204,
-        height: 92,
+        x: 92,
+        y: 250,
+        width: 296,
+        height: 104,
         rackUnits: 4,
         tags: ['WING TOUCH', '4U BEZEL'],
         signalPath: {
@@ -955,30 +779,226 @@ export const CAD_BLUEPRINTS: CadBlueprint[] = [
       {
         id: 'sr-marshall-duals',
         assetId: 'SR-RIG-01',
-        slotLabel: 'SR-R 3U + Bottom 4U',
-        title: 'Wing Marshall Dual LCD & Lower Crestron Touchpanel',
-        model: 'Marshall 3U Dual LCD Monitor + Bottom Crestron Panel (7U Total)',
+        slotLabel: 'U20–U22 (3U)',
+        title: 'Wing Marshall Dual Rackmount LCD Preview',
+        model: 'Marshall 3U Dual 7" Broadcast LCD Monitor',
         summary:
-          'Bottom half of Stage Right control rack matching FOH Rack 01: dual 7-inch stage/conductor camera displays above an illuminated Crestron touch interface.',
+          'Mid-rack dual 7-inch stage and conductor camera displays matching FOH Rack 01, giving backstage crew visual beat lock when curtain wings block sightlines.',
         motif: 'marshall-dual-lcd',
-        x: 308,
-        y: 358,
-        width: 204,
-        height: 186,
-        rackUnits: 7,
-        tags: ['MARSHALL DUAL', 'CRESTRON'],
+        x: 92,
+        y: 356,
+        width: 296,
+        height: 78,
+        rackUnits: 3,
+        tags: ['MARSHALL DUAL', '3U LCD'],
         signalPath: {
           input: 'Pit Conductor Camera & House Stage Camera Feeds',
-          processing: 'Low-Latency Dual Broadcast Preview + Crestron Control',
+          processing: 'Low-Latency Dual Broadcast Preview',
           output: 'Backstage Cue Visibility for ASM / Audio Crew'
         },
-        powerAndClock: 'Lower Crestron wakes on tap to mirror BHS system controls.',
+        powerAndClock: 'Always verify pit conductor camera feed before Act I curtain.',
         specs: [
           'Provides backstage visual lock on conductor beat when curtain wings block view',
           'Mirror-paired with FOH Rack 01 Marshall preview unit',
           'F1–F4 buttons select camera inputs cleanly per act'
         ],
         photoPath: './assets/aistudio/IMG_6037__2__c20b29d9.jpg'
+      },
+      {
+        id: 'sr-crestron-lower',
+        assetId: 'SR-RIG-01',
+        slotLabel: 'U16–U19 (4U)',
+        title: 'Stage Right Crestron Master Touchpanel',
+        model: 'Crestron Flush 4U Wing Control Interface',
+        summary:
+          'Illuminated Crestron touchpanel positioned directly beneath the Marshall Dual LCDs, providing mirrored Q-SYS auditorium preset and mute control.',
+        motif: 'crestron-touch',
+        x: 92,
+        y: 436,
+        width: 296,
+        height: 104,
+        rackUnits: 4,
+        tags: ['CRESTRON', '4U PANEL'],
+        signalPath: {
+          input: 'Crestron Control VLAN from FOH Rack 01 CP4N',
+          processing: 'Room Mode & Stage Audio Override State Sync',
+          output: 'Q-SYS Core 110f Preset Recall & Stage Mute Telemetry'
+        },
+        powerAndClock: 'Wakes on tap to mirror Boulder Panthers BHS system controls.',
+        specs: [
+          'Verify panel matches FOH Rack 01 room mode before curtain',
+          'Do not leave in Lectern/Assembly mode during full musicals',
+          'Touch interface locks out accidental DSP edits while exposing stage macros'
+        ],
+        photoPath: './assets/aistudio/IMG_6037__2__c20b29d9.jpg'
+      },
+      {
+        id: 'sr-servoreeler',
+        assetId: 'SR-COM-01',
+        slotLabel: 'U14–U15 (2U)',
+        title: 'Servoreeler Systems SRC Interface Controller',
+        model: 'Xedit Corp SRC 24VDC Motorized Reel Controller',
+        summary:
+          'Motorized cable/mic reel power controller mounted below the Crestron touchpanel, featuring left master power switch and right RETRACT / DEPLOY pushbuttons.',
+        motif: 'servoreeler-src',
+        x: 92,
+        y: 542,
+        width: 296,
+        height: 52,
+        rackUnits: 2,
+        tags: ['SERVOREELER', 'RETRACT / DEPLOY'],
+        signalPath: {
+          input: '120V AC -> 24VDC 8.4A Internal Power Supply',
+          processing: 'Dual 3A 4A-SB Fuse Protection & Rear Speed Trims',
+          output: 'Motorized Overhead Stage Choir Mic Drop Reels'
+        },
+        powerAndClock: 'Switch off master key/rocker when overhead reels are not in production.',
+        specs: [
+          'RETRACT raises overhead choir mic cable reels cleanly',
+          'MASTER + DEPLOY lowers mic drops to pre-calibrated trim stops',
+          'Never hold DEPLOY past lower limit stop'
+        ],
+        photoPath: './assets/aistudio/IMG_6036__2__6f6ae340.jpg'
+      },
+      {
+        id: 'sr-clearcom-ms702',
+        assetId: 'SR-COM-01',
+        slotLabel: 'U13 (1U)',
+        title: 'Clear-Com MS-702 Encore Dual-Channel Master',
+        model: 'Clear-Com MS-702 2-Channel Partyline Master Station (1U)',
+        summary:
+          'Hardwired backstage intercom master featuring 1/4" Panel Mic, 4-pin XLR Headset jack, Channel A & B Talk/Call/Volume controls, Partyline Link, and right speaker louvers.',
+        motif: 'clearcom-ms702',
+        x: 92,
+        y: 596,
+        width: 296,
+        height: 26,
+        rackUnits: 1,
+        tags: ['CLEAR-COM MS-702', 'CH A / CH B'],
+        signalPath: {
+          input: 'Panel/Headset Mic + Stage Beltpacks (XLR-3 Partyline Ch A & B)',
+          processing: 'Internal 30V DC Partyline Power & Sidetone Null Trim',
+          output: 'Stage Right, Booth, Spotlights & Fly-Rail Hardwired Beltpacks'
+        },
+        powerAndClock: 'Verify Partyline Link state matches SM call channel configuration.',
+        specs: [
+          'Allows Stage Manager to address Ch A (Audio/LX) and Ch B (Deck/Fly) separately or linked',
+          'Remote Mic Kill button silences open stage headsets quickly during quiet scenes',
+          'Program level rotary knob blends house stage audio onto beltpack ears'
+        ],
+        photoPath: './assets/aistudio/IMG_6036__2__6f6ae340.jpg'
+      },
+      {
+        id: 'sr-clearcom-dx210',
+        assetId: 'SR-COM-01',
+        slotLabel: 'U12 (1U)',
+        title: 'Clear-Com HME DX210 Wireless Intercom Base',
+        model: 'Clear-Com HME DX210 Digital 2.4 GHz Base Station (1U)',
+        summary:
+          'Wireless beltpack transceiver integrated directly with the MS-702 partyline via 2-Wire/4-Wire matrix controls, featuring CLR/BND registration display, Aux In/Out, and Headset Talk controls.',
+        motif: 'clearcom-dx210',
+        x: 92,
+        y: 624,
+        width: 296,
+        height: 26,
+        rackUnits: 1,
+        tags: ['HME DX210', '2.4 GHz'],
+        signalPath: {
+          input: 'Clear-Com MS-702 2W Partyline + 2.4GHz Wireless Headsets (IC1/IC2)',
+          processing: 'Digital Spread Spectrum Encryption & Echo Cancellation',
+          output: 'Full-Duplex Roving Stage Crew & Followspot Comms'
+        },
+        powerAndClock: 'Use CLR/BND button only if pairing a replacement wireless beltpack.',
+        specs: [
+          'Bridges IC1/IC2 wireless groups cleanly into hardwired Ch A/B',
+          'Inspect 2W Input/Output null pots only during initial seasonal setup',
+          'Avoid placing Wi-Fi routers directly beside DX210 rear dipole antennas'
+        ],
+        photoPath: './assets/aistudio/IMG_6036__2__6f6ae340.jpg'
+      },
+      {
+        id: 'sr-crown-xls',
+        assetId: 'SR-COM-01',
+        slotLabel: 'U10–U11 (2U)',
+        title: 'Crown XLS1000 DriveCore Amplifier',
+        model: 'Crown XLS1000 High-Density Amplifier (2U Faceplate)',
+        summary:
+          '2U DriveCore amp reading "STEREO BYPASS" on its center backlit LCD, flanked by CH1/CH2 notched level dials and honeycomb ventilation grille.',
+        motif: 'crown-xls1000',
+        x: 92,
+        y: 652,
+        width: 296,
+        height: 52,
+        rackUnits: 2,
+        tags: ['XLS1000', 'STEREO BYPASS'],
+        signalPath: {
+          input: 'FOH Stage Monitor Aux / Stage Right Submix',
+          processing: 'DriveCore Class-D Switching (STEREO BYPASS Active)',
+          output: 'On-Stage Monitor Feeds / Side-Fill Reinforcement'
+        },
+        powerAndClock: 'Verify LCD reads STEREO BYPASS and Ch1/Ch2 signal indicators react.',
+        specs: [
+          'Ch1 & Ch2 gain pots set for balanced stage foldback without acoustic bleed',
+          'Power switch bottom-right active indicator confirms online state',
+          'Zero-latency PureBand crossover available via LCD MODE/MENU if needed'
+        ],
+        photoPath: './assets/aistudio/IMG_6036__2__6f6ae340.jpg'
+      },
+      {
+        id: 'sr-inuke-trio',
+        assetId: 'SR-COM-01',
+        slotLabel: 'U4–U9 (6U · 3x 2U)',
+        title: '3x Behringer iNUKE NU1000 Foldback & Dressing Amps',
+        model: '3x Behringer iNUKE NU1000 Ultra-Lightweight Amps',
+        summary:
+          'Curved ear-handle trio with illuminated rotary detents and central status displays. Drives on-stage foldback wedges and understage dressing room actor cue monitors.',
+        motif: 'behringer-inuke',
+        x: 92,
+        y: 706,
+        width: 296,
+        height: 158,
+        rackUnits: 6,
+        tags: ['3x iNUKE NU1000', 'UNDERSTAGE CUES'],
+        signalPath: {
+          input: 'Behringer S16 Stagebox Outputs / Stage Foldback Sends',
+          processing: 'Stereo Dual-Channel High-Density Class-D Amplification',
+          output: 'On-Stage Foldback Wedges & Understage Dressing Room Speakers'
+        },
+        powerAndClock: 'Rotary collars illuminate when active; confirm online before 4:45 PM actor call.',
+        specs: [
+          'CRITICAL FOR MUSICALS: Understage actors miss entrances if iNUKEs stay powered down',
+          'Top-to-bottom stacked amps 1–3 map across floor wedges & dressing zones',
+          'Check clip indicators only flash momentarily during loudest chorus numbers'
+        ],
+        photoPath: './assets/aistudio/IMG_6036__2__6f6ae340.jpg'
+      },
+      {
+        id: 'sr-s16-stagebox',
+        assetId: 'SR-COM-01',
+        slotLabel: 'SR-L Bottom 3U (U1–U3)',
+        title: 'Behringer S16 / S32 Digital Stagebox (SR-L Bottom 3U Patches)',
+        model: 'AES50 Digital Stagebox (Dual XLR Input Rows + Monitor Outputs)',
+        summary:
+          'Bottom 3U digital snake box terminating wired stage mics, floor sub-snakes, and pit spots via front/rear XLR-in banks (lower 16 populated bottom row), routing back to FOH over SuperMAC AES50.',
+        motif: 'behringer-s16',
+        x: 92,
+        y: 866,
+        width: 296,
+        height: 78,
+        rackUnits: 3,
+        tags: ['SR-L BOTTOM 3U', 'AES50 PATCH'],
+        signalPath: {
+          input: 'Wired Stage Microphones, Choir Mics & Pit Spot Inputs',
+          processing: '24-Bit/48kHz MIDAS Remote-Controllable Preamps',
+          output: 'Balanced Monitor XLRs -> iNUKEs + Shielded Cat-5e AES50 Trunk -> FOH X32'
+        },
+        powerAndClock: 'Verify AES50-A clock sync lock on right panel edge.',
+        specs: [
+          'Accepts remote gain & +48V changes directly from FOH X32 console',
+          'Maximum AES50 run: 100 meters via shielded Ethercon Cat-5e only',
+          'Bottom 3U XLR patch rows feed both FOH console inputs and local iNUKE monitor sends'
+        ],
+        photoPath: './assets/aistudio/IMG_6036__2__6f6ae340.jpg'
       }
     ]
   },

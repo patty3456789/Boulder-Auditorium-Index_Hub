@@ -8,11 +8,14 @@ import { DatabaseView } from './components/DatabaseView';
 import { DiagramsView } from './components/DiagramsView';
 import { LandingView } from './components/LandingView';
 import { RunbooksView } from './components/RunbooksView';
+import { SignalGeneratorPopover } from './components/SignalGeneratorPopover';
 import { TopNav } from './components/TopNav';
+import { TriageWizardModal } from './components/TriageWizardModal';
 import { WikiView } from './components/WikiView';
 import { SHOW_CONFIGS } from './data/showConfigs';
 import { DEFAULT_TEAM_NOTES } from './data/wikiChapters';
 import { ShowKey, TeamNote, ViewId } from './types';
+import { useSignalGenerator } from './utils/useSignalGenerator';
 
 const STORAGE_KEYS = {
   activeShow: 'boulder_audio_active_show_v1',
@@ -42,6 +45,16 @@ export default function App() {
   const [notes, setNotes] = useState<TeamNote[]>(() =>
     readStorage<TeamNote[]>(STORAGE_KEYS.teamNotes, DEFAULT_TEAM_NOTES)
   );
+
+  const [isTriageOpen, setIsTriageOpen] = useState(false);
+  const [isSignalGenOpen, setIsSignalGenOpen] = useState(false);
+  const [diagramJumpTarget, setDiagramJumpTarget] = useState<{
+    blueprintId: string;
+    unitId: string;
+    nonce: number;
+  } | null>(null);
+
+  const signalGenerator = useSignalGenerator();
 
   useEffect(() => {
     try {
@@ -108,6 +121,11 @@ export default function App() {
     setNotes((prev) => prev.filter((n) => n.id !== id));
   };
 
+  const handleJumpToDiagram = (blueprintId: string, unitId: string) => {
+    setDiagramJumpTarget({ blueprintId, unitId, nonce: Date.now() });
+    setActiveView('diagrams');
+  };
+
   const { completedStepCount, totalStepCount } = useMemo(() => {
     const show = SHOW_CONFIGS[activeShow];
     let total = 0;
@@ -130,6 +148,26 @@ export default function App() {
         activeShow={activeShow}
         onSelectView={setActiveView}
         onSelectShow={setActiveShow}
+        onOpenTriage={() => {
+          setIsSignalGenOpen(false);
+          setIsTriageOpen(true);
+        }}
+        isSignalGenOpen={isSignalGenOpen}
+        onToggleSignalGen={() => setIsSignalGenOpen((prev) => !prev)}
+        signalGenerator={signalGenerator}
+      />
+
+      {isSignalGenOpen && (
+        <SignalGeneratorPopover
+          generator={signalGenerator}
+          onClose={() => setIsSignalGenOpen(false)}
+        />
+      )}
+
+      <TriageWizardModal
+        isOpen={isTriageOpen}
+        onClose={() => setIsTriageOpen(false)}
+        onJumpToDiagram={handleJumpToDiagram}
       />
 
       <main>
@@ -143,7 +181,9 @@ export default function App() {
           />
         )}
 
-        {activeView === 'diagrams' && <DiagramsView />}
+        {activeView === 'diagrams' && (
+          <DiagramsView externalTarget={diagramJumpTarget} />
+        )}
 
         {activeView === 'runbooks' && (
           <RunbooksView

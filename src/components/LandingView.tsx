@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { ArrowUpRight, BookOpen, Cpu, Database, ListChecks } from 'lucide-react';
 import { SHOW_CONFIGS } from '../data/showConfigs';
 import { ShowKey, ViewId } from '../types';
+import { GlossaryText } from './GlossaryText';
 
 interface LandingViewProps {
   activeShow: ShowKey;
@@ -47,7 +48,7 @@ const HUB_TILES: Array<{
   {
     id: 'wiki',
     label: 'x32 manual & wiki',
-    subtitle: '14-chapter technical reference, embedded X32 manual PDF & crew field notes',
+    subtitle: '15-chapter technical reference, embedded X32 manual PDF & crew field notes',
     icon: BookOpen
   }
 ];
@@ -99,9 +100,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
             </div>
 
             <p className="max-w-xl text-sm leading-relaxed text-zinc-400">
-              Centralized technical hub for the Behringer X32 console, TheatreMix DCA mapping,
-              27-channel Shure BLX4R wireless rack, Q-SYS Core 110f DSP, Stage Right Clear-Com,
-              Black Box Soundcraft Si Expression 3, and the Sundance 45-channel Dolby Atmos rack.
+              <GlossaryText text="Centralized technical hub for the Behringer X32 console, TheatreMix DCA mapping, 27-channel Shure BLX4R wireless rack, Q-SYS Core 110f DSP, Stage Right Clear-Com, Black Box Soundcraft Si Expression 3, and the Sundance 45-channel Dolby Atmos rack." />
             </p>
 
             {/* Active Production Profile Bar */}
@@ -187,7 +186,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
                     {tile.label}
                   </h2>
                   <p className="text-xs leading-relaxed text-zinc-400">
-                    {tile.subtitle}
+                    <GlossaryText text={tile.subtitle} />
                   </p>
                 </div>
               </button>

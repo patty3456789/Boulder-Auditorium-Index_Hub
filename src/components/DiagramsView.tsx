@@ -1,9 +1,23 @@
-import React, { useMemo, useState } from 'react';
-import { Camera, ChevronLeft, ChevronRight, X, ZoomIn, ZoomOut } from 'lucide-react';
+import React, { useEffect, useMemo, useState } from 'react';
+import {
+  Activity,
+  Camera,
+  ChevronLeft,
+  ChevronRight,
+  X,
+  ZoomIn,
+  ZoomOut
+} from 'lucide-react';
 import { CAD_BLUEPRINTS } from '../data/cadBlueprints';
+import { SIGNAL_TRACE_ROUTES } from '../data/signalTraces';
 import { CadSvgRenderer } from './CadSvgRenderer';
+import { GlossaryText } from './GlossaryText';
 
-export const DiagramsView: React.FC = () => {
+interface DiagramsViewProps {
+  externalTarget?: { blueprintId: string; unitId: string; nonce: number } | null;
+}
+
+export const DiagramsView: React.FC<DiagramsViewProps> = ({ externalTarget }) => {
   const [selectedBlueprintId, setSelectedBlueprintId] = useState<string>(
     CAD_BLUEPRINTS[0]?.id ?? ''
   );
@@ -20,6 +34,21 @@ export const DiagramsView: React.FC = () => {
   const [showPhotoModal, setShowPhotoModal] = useState(false);
   const [photoError, setPhotoError] = useState(false);
 
+  // Signal Flow Tracer State
+  const [activeTraceId, setActiveTraceId] = useState<string | null>(null);
+  const [activeTraceStep, setActiveTraceStep] = useState<number>(1);
+
+  useEffect(() => {
+    if (!externalTarget) return;
+    setSelectedBlueprintId(externalTarget.blueprintId);
+    setSelectedUnitByBlueprint((prev) => ({
+      ...prev,
+      [externalTarget.blueprintId]: externalTarget.unitId
+    }));
+    setPhotoError(false);
+    setShowPhotoModal(false);
+  }, [externalTarget]);
+
   const blueprint = useMemo(
     () =>
       CAD_BLUEPRINTS.find((b) => b.id === selectedBlueprintId) ??
@@ -33,6 +62,19 @@ export const DiagramsView: React.FC = () => {
   const activeUnit =
     blueprint.units[unitIndex >= 0 ? unitIndex : 0] ?? blueprint.units[0];
 
+  const activeTrace = useMemo(
+    () => SIGNAL_TRACE_ROUTES.find((r) => r.id === activeTraceId) ?? null,
+    [activeTraceId]
+  );
+
+  const activeStage = useMemo(
+    () =>
+      activeTrace?.stages.find((s) => s.step === activeTraceStep) ??
+      activeTrace?.stages[0] ??
+      null,
+    [activeTrace, activeTraceStep]
+  );
+
   const selectUnit = (unitId: string) => {
     setSelectedUnitByBlueprint((prev) => ({ ...prev, [blueprint.id]: unitId }));
     setPhotoError(false);
@@ -44,6 +86,33 @@ export const DiagramsView: React.FC = () => {
       (Math.max(0, unitIndex) + delta + blueprint.units.length) %
       blueprint.units.length;
     selectUnit(blueprint.units[nextIdx].id);
+  };
+
+  const activateTraceStage = (traceId: string, stepNum: number) => {
+    const route = SIGNAL_TRACE_ROUTES.find((r) => r.id === traceId);
+    if (!route) return;
+    const stage =
+      route.stages.find((s) => s.step === stepNum) ?? route.stages[0];
+    if (!stage) return;
+
+    setActiveTraceId(traceId);
+    setActiveTraceStep(stage.step);
+    setSelectedBlueprintId(stage.blueprintId);
+    setSelectedUnitByBlueprint((prev) => ({
+      ...prev,
+      [stage.blueprintId]: stage.unitId
+    }));
+    setShowPhotoModal(false);
+    setPhotoError(false);
+  };
+
+  const stepTraceStage = (delta: number) => {
+    if (!activeTrace || activeTrace.stages.length === 0) return;
+    const idx = activeTrace.stages.findIndex((s) => s.step === activeTraceStep);
+    const nextIdx =
+      (Math.max(0, idx) + delta + activeTrace.stages.length) %
+      activeTrace.stages.length;
+    activateTraceStage(activeTrace.id, activeTrace.stages[nextIdx].step);
   };
 
   return (
@@ -73,7 +142,7 @@ export const DiagramsView: React.FC = () => {
                 }}
                 className={`border px-3 py-1.5 font-mono text-xs transition-colors ${
                   active
-                    ? 'border-[#38bdf8] bg-[#38bdf8]/15 text-[#38bdf8]'
+                    ? 'border-[#9d7cd8] bg-[#9d7cd8]/15 text-[#9d7cd8]'
                     : 'border-zinc-800 bg-[#0a0a0a] text-zinc-400 hover:border-zinc-700 hover:text-zinc-200'
                 }`}
               >
@@ -82,6 +151,115 @@ export const DiagramsView: React.FC = () => {
             );
           })}
         </div>
+      </div>
+
+      {/* Verified Signal Flow Tracer + Stage Jumper Bar */}
+      <div className="space-y-3 border border-zinc-800 bg-[#121212] p-4">
+        <div className="flex flex-col justify-between gap-3 md:flex-row md:items-center">
+          <div className="flex items-center gap-2 font-mono text-xs">
+            <Activity className="h-3.5 w-3.5 text-[#9d7cd8]" />
+            <span className="font-semibold text-zinc-100">trace signal chain</span>
+            <span className="hidden text-zinc-500 sm:inline">
+              · verify auditorium loop across racks & console
+            </span>
+          </div>
+
+          <div className="flex flex-wrap gap-1.5">
+            <button
+              type="button"
+              onClick={() => setActiveTraceId(null)}
+              className={`border px-2.5 py-1 font-mono text-[11px] transition-colors ${
+                activeTraceId === null
+                  ? 'border-zinc-500 bg-zinc-800/70 text-zinc-100'
+                  : 'border-zinc-800 bg-[#0a0a0a] text-zinc-500 hover:border-zinc-700 hover:text-zinc-200'
+              }`}
+            >
+              trace off
+            </button>
+            {SIGNAL_TRACE_ROUTES.map((route) => {
+              const active = activeTraceId === route.id;
+              return (
+                <button
+                  key={route.id}
+                  type="button"
+                  onClick={() => activateTraceStage(route.id, 1)}
+                  className={`border px-2.5 py-1 font-mono text-[11px] transition-colors ${
+                    active
+                      ? 'border-[#9d7cd8] bg-[#9d7cd8]/20 text-[#9d7cd8]'
+                      : 'border-zinc-800 bg-[#0a0a0a] text-zinc-400 hover:border-zinc-700 hover:text-zinc-200'
+                  }`}
+                >
+                  {route.label}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {activeTrace && activeStage && (
+          <div className="space-y-2.5 border-t border-zinc-800 pt-3">
+            {/* Horizontal Sequential Stage Jumper Strip */}
+            <div className="flex flex-wrap items-center gap-1.5">
+              <button
+                type="button"
+                onClick={() => stepTraceStage(-1)}
+                aria-label="Previous signal trace stage"
+                className="border border-zinc-800 bg-[#0a0a0a] p-1.5 text-zinc-400 hover:border-zinc-700 hover:text-zinc-100"
+              >
+                <ChevronLeft className="h-3.5 w-3.5" />
+              </button>
+
+              {activeTrace.stages.map((st, idx) => {
+                const isCurrent = st.step === activeStage.step;
+                const onCurrentBlueprint = st.blueprintId === blueprint.id;
+                return (
+                  <React.Fragment key={`${activeTrace.id}-${st.step}`}>
+                    {idx > 0 && (
+                      <span className="font-mono text-[11px] text-zinc-600">→</span>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => activateTraceStage(activeTrace.id, st.step)}
+                      className={`border px-2.5 py-1 font-mono text-[11px] transition-colors ${
+                        isCurrent
+                          ? 'border-[#9d7cd8] bg-[#9d7cd8] font-semibold text-[#0a0a0a]'
+                          : onCurrentBlueprint
+                          ? 'border-[#9d7cd8]/60 bg-[#9d7cd8]/15 text-zinc-100 hover:border-[#9d7cd8]'
+                          : 'border-zinc-800 bg-[#0a0a0a] text-zinc-400 hover:border-zinc-700 hover:text-zinc-200'
+                      }`}
+                    >
+                      {st.step}. {st.shortLabel}
+                    </button>
+                  </React.Fragment>
+                );
+              })}
+
+              <button
+                type="button"
+                onClick={() => stepTraceStage(1)}
+                aria-label="Next signal trace stage"
+                className="border border-zinc-800 bg-[#0a0a0a] p-1.5 text-zinc-400 hover:border-zinc-700 hover:text-zinc-100"
+              >
+                <ChevronRight className="h-3.5 w-3.5" />
+              </button>
+            </div>
+
+            {/* Active Stage Spec Bar */}
+            <div className="flex flex-col justify-between gap-2 border border-zinc-800 bg-[#0a0a0a] px-3.5 py-2.5 font-mono text-xs md:flex-row md:items-center">
+              <div className="space-y-0.5">
+                <span className="text-[#9d7cd8] font-semibold">
+                  stage {activeStage.step}/{activeTrace.stages.length} · {activeStage.stationLabel}
+                </span>
+                <p className="text-zinc-200">
+                  <GlossaryText text={activeStage.signalNote} />
+                </p>
+              </div>
+              <div className="shrink-0 text-[11px] text-zinc-400">
+                <GlossaryText text={activeStage.connectorSpec} />
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
       {/* 60% CAD Schematic / 40% Inspector Callout Split */}
@@ -131,6 +309,8 @@ export const DiagramsView: React.FC = () => {
                 blueprint={blueprint}
                 selectedUnitId={activeUnit?.id ?? ''}
                 onSelectUnit={selectUnit}
+                traceStages={activeTrace?.stages ?? []}
+                activeTraceStep={activeStage?.step ?? null}
               />
             </div>
           </div>
@@ -143,7 +323,7 @@ export const DiagramsView: React.FC = () => {
               {/* Header + Prev/Next */}
               <div className="flex items-start justify-between gap-3 border-b border-zinc-800 pb-4">
                 <div>
-                  <div className="font-mono text-[11px] uppercase tracking-wider text-[#38bdf8]">
+                  <div className="font-mono text-[11px] uppercase tracking-wider text-[#9d7cd8]">
                     {activeUnit.slotLabel} · {activeUnit.assetId}
                   </div>
                   <h2 className="mt-1 font-mono text-base font-semibold text-zinc-100">
@@ -174,7 +354,7 @@ export const DiagramsView: React.FC = () => {
               </div>
 
               <p className="text-xs leading-relaxed text-zinc-300">
-                {activeUnit.summary}
+                <GlossaryText text={activeUnit.summary} />
               </p>
 
               {/* Signal Flow Path */}
@@ -184,15 +364,21 @@ export const DiagramsView: React.FC = () => {
                 </div>
                 <div>
                   <span className="text-zinc-500">in: </span>
-                  <span className="text-zinc-200">{activeUnit.signalPath.input}</span>
+                  <span className="text-zinc-200">
+                    <GlossaryText text={activeUnit.signalPath.input} />
+                  </span>
                 </div>
                 <div>
                   <span className="text-zinc-500">dsp: </span>
-                  <span className="text-[#9d7cd8]">{activeUnit.signalPath.processing}</span>
+                  <span className="text-[#9d7cd8]">
+                    <GlossaryText text={activeUnit.signalPath.processing} />
+                  </span>
                 </div>
                 <div>
                   <span className="text-zinc-500">out: </span>
-                  <span className="text-[#38bdf8]">{activeUnit.signalPath.output}</span>
+                  <span className="text-zinc-100">
+                    <GlossaryText text={activeUnit.signalPath.output} />
+                  </span>
                 </div>
               </div>
 
@@ -201,7 +387,9 @@ export const DiagramsView: React.FC = () => {
                 <div className="text-[11px] uppercase tracking-wider text-zinc-500">
                   power & clock notes
                 </div>
-                <p className="mt-1 text-zinc-200">{activeUnit.powerAndClock}</p>
+                <p className="mt-1 text-zinc-200">
+                  <GlossaryText text={activeUnit.powerAndClock} />
+                </p>
               </div>
 
               {/* Field Checklist Bullets */}
@@ -212,8 +400,8 @@ export const DiagramsView: React.FC = () => {
                 <ul className="space-y-1.5 text-xs text-zinc-300">
                   {activeUnit.specs.map((spec) => (
                     <li key={spec} className="flex items-start gap-2">
-                      <span className="font-mono text-[#38bdf8]">›</span>
-                      <span>{spec}</span>
+                      <span className="font-mono text-[#9d7cd8]">›</span>
+                      <GlossaryText text={spec} />
                     </li>
                   ))}
                 </ul>
@@ -227,7 +415,7 @@ export const DiagramsView: React.FC = () => {
                     setPhotoError(false);
                     setShowPhotoModal((prev) => !prev);
                   }}
-                  className="inline-flex w-full items-center justify-center gap-2 border border-[#38bdf8]/50 bg-[#38bdf8]/10 px-3 py-2 font-mono text-xs text-[#38bdf8] transition-colors hover:bg-[#38bdf8]/20"
+                  className="inline-flex w-full items-center justify-center gap-2 border border-[#9d7cd8]/60 bg-[#9d7cd8]/15 px-3 py-2 font-mono text-xs text-[#9d7cd8] transition-colors hover:bg-[#9d7cd8]/25"
                 >
                   <Camera className="h-3.5 w-3.5" />
                   {showPhotoModal ? 'hide reference photo' : 'inspect real booth photo'}
@@ -279,7 +467,7 @@ export const DiagramsView: React.FC = () => {
                     onClick={() => selectUnit(u.id)}
                     className={`flex items-center justify-between border px-2.5 py-1.5 text-left font-mono text-[11px] transition-colors ${
                       selected
-                        ? 'border-[#38bdf8] bg-[#38bdf8]/10 text-[#38bdf8]'
+                        ? 'border-[#9d7cd8] bg-[#9d7cd8]/15 text-[#9d7cd8]'
                         : 'border-zinc-800/70 bg-[#0a0a0a] text-zinc-400 hover:border-zinc-700 hover:text-zinc-200'
                     }`}
                   >

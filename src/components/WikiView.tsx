@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { WIKI_CHAPTERS } from '../data/wikiChapters';
 import { TeamNote } from '../types';
+import { GlossaryText } from './GlossaryText';
 
 interface WikiViewProps {
   notes: TeamNote[];
@@ -205,7 +206,7 @@ export const WikiView: React.FC<WikiViewProps> = ({
                     {activeChapter.title}
                   </h2>
                   <p className="text-sm leading-relaxed text-zinc-400">
-                    {activeChapter.summary}
+                    <GlossaryText text={activeChapter.summary} />
                   </p>
                 </header>
 
@@ -216,7 +217,7 @@ export const WikiView: React.FC<WikiViewProps> = ({
                       key={idx}
                       className="text-sm leading-7 text-zinc-200"
                     >
-                      {para}
+                      <GlossaryText text={para} />
                     </p>
                   ))}
                 </div>
@@ -228,7 +229,7 @@ export const WikiView: React.FC<WikiViewProps> = ({
                       key={wt.heading}
                       className="border border-zinc-800 bg-[#0a0a0a] p-5"
                     >
-                      <h3 className="font-mono text-sm font-semibold text-[#38bdf8]">
+                      <h3 className="font-mono text-sm font-semibold text-[#9d7cd8]">
                         {wt.heading}
                       </h3>
                       <ol className="mt-3 space-y-2.5 text-xs leading-relaxed text-zinc-300">
@@ -237,7 +238,7 @@ export const WikiView: React.FC<WikiViewProps> = ({
                             <span className="mt-0.5 font-mono text-[11px] font-semibold text-[#9d7cd8] tabular-nums">
                               {sIdx + 1}.
                             </span>
-                            <span>{step}</span>
+                            <GlossaryText text={step} />
                           </li>
                         ))}
                       </ol>
@@ -251,7 +252,7 @@ export const WikiView: React.FC<WikiViewProps> = ({
                     why it matters · {activeChapter.whyItMatters.title}
                   </div>
                   <p className="mt-2 text-xs leading-relaxed text-zinc-200">
-                    {activeChapter.whyItMatters.body}
+                    <GlossaryText text={activeChapter.whyItMatters.body} />
                   </p>
                 </section>
 
@@ -267,8 +268,12 @@ export const WikiView: React.FC<WikiViewProps> = ({
                           key={row.label}
                           className="grid gap-2 px-4 py-2.5 font-mono text-xs sm:grid-cols-2"
                         >
-                          <span className="text-zinc-400">{row.label}</span>
-                          <span className="text-zinc-100">{row.value}</span>
+                          <span className="text-zinc-400">
+                            <GlossaryText text={row.label} />
+                          </span>
+                          <span className="text-zinc-100">
+                            <GlossaryText text={row.value} />
+                          </span>
                         </div>
                       ))}
                     </div>
@@ -277,7 +282,7 @@ export const WikiView: React.FC<WikiViewProps> = ({
 
                 {/* Troubleshooting Scenarios */}
                 <section className="space-y-3">
-                  <div className="flex items-center gap-2 font-mono text-xs font-semibold uppercase tracking-wider text-amber-400">
+                  <div className="flex items-center gap-2 font-mono text-xs font-semibold uppercase tracking-wider text-[#9d7cd8]">
                     <AlertTriangle className="h-3.5 w-3.5" />
                     live show troubleshooting
                   </div>
@@ -288,22 +293,28 @@ export const WikiView: React.FC<WikiViewProps> = ({
                         className="space-y-2 border border-zinc-800 bg-[#0a0a0a] p-4 text-xs"
                       >
                         <div>
-                          <span className="font-mono font-semibold text-amber-300">
+                          <span className="font-mono font-semibold text-zinc-100">
                             symptom:{' '}
                           </span>
-                          <span className="text-zinc-200">{item.symptom}</span>
+                          <span className="text-zinc-300">
+                            <GlossaryText text={item.symptom} />
+                          </span>
                         </div>
                         <div>
                           <span className="font-mono font-semibold text-zinc-400">
                             root cause:{' '}
                           </span>
-                          <span className="text-zinc-300">{item.cause}</span>
+                          <span className="text-zinc-400">
+                            <GlossaryText text={item.cause} />
+                          </span>
                         </div>
                         <div>
-                          <span className="font-mono font-semibold text-emerald-400">
+                          <span className="font-mono font-semibold text-[#9d7cd8]">
                             fix:{' '}
                           </span>
-                          <span className="text-zinc-200">{item.resolution}</span>
+                          <span className="text-zinc-100">
+                            <GlossaryText text={item.resolution} />
+                          </span>
                         </div>
                       </div>
                     ))}
@@ -439,7 +450,7 @@ export const WikiView: React.FC<WikiViewProps> = ({
                         type="button"
                         onClick={() => onDeleteNote(note.id)}
                         aria-label="Delete note"
-                        className="text-zinc-500 transition-colors hover:text-red-400"
+                        className="text-zinc-500 transition-colors hover:text-[#9d7cd8]"
                       >
                         <Trash2 className="h-3.5 w-3.5" />
                       </button>
@@ -447,7 +458,7 @@ export const WikiView: React.FC<WikiViewProps> = ({
                   </div>
                 </div>
                 <p className="mt-2 text-xs leading-relaxed text-zinc-300">
-                  {note.body}
+                  <GlossaryText text={note.body} />
                 </p>
               </div>
             ))}

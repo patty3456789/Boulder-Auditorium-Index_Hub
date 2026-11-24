@@ -3,7 +3,7 @@ import { ShowConfig } from '../types';
 export const SHOW_CONFIGS: Record<string, ShowConfig> = {
   'spring-musical': {
     key: 'spring-musical',
-    name: 'Spring Musical // Anastasia',
+    name: 'Spring Musical',
     tag: 'FULL PRODUCTION · 27 WIRELESS',
     description:
       '25+ Shure BLX1 bodypacks plus HH1/HH2 handhelds, TheatreMix dynamic DCA scene mapping on the Behringer X32, live unamplified orchestra pit, and dedicated understage RF support.',
@@ -70,7 +70,7 @@ export const SHOW_CONFIGS: Record<string, ShowConfig> = {
   },
   'black-box': {
     key: 'black-box',
-    name: 'Fall Black Box // One-Act Plays',
+    name: 'Fall Black Box',
     tag: 'INTIMATE PLAYBACK · UNDER-SEATING ARRAY',
     description:
       'Compact intimate seating configuration pairing playback laptop feeds (via Radial ProAV1 DI or X32 Ch 14–15) and Soundcraft Si Expression 3 routing into daisy-chained under-seating speakers.',
@@ -118,7 +118,7 @@ export const SHOW_CONFIGS: Record<string, ShowConfig> = {
   },
   'haunted-house': {
     key: 'haunted-house',
-    name: 'Fall Haunted House // Twisted Circus Loops',
+    name: 'Fall Haunted House',
     tag: 'DECENTRALIZED · ANTMI MP3 UNITS',
     description:
       'Decentralized multi-room horror attraction running standalone Antimi MP3 players on 4-hour MicroSD continuous loops backed by wing JBL powered wedges.',
@@ -141,7 +141,7 @@ export const SHOW_CONFIGS: Record<string, ShowConfig> = {
         steps: [
           'Verify every Antimi standalone MP3 unit holds its room-specific MicroSD card loaded with the 4-hour continuous loop track.',
           'Deploy units to designated haunt rooms, connect 3.5mm/speaker outputs, verify loop start, and set room volume against bleed.',
-          'Power on wing JBL powered monitors fed by the auxiliary iPod sub-mixer for Twisted Circus hall ambiance.'
+          'Power on wing JBL powered monitors fed by the auxiliary iPod sub-mixer for hall ambiance.'
         ]
       },
       {
@@ -162,7 +162,7 @@ export const SHOW_CONFIGS: Record<string, ShowConfig> = {
   },
   'sundance-cinema': {
     key: 'sundance-cinema',
-    name: 'Sundance Film Festival // Dolby Atmos Array',
+    name: 'Sundance Film Festival',
     tag: 'CINEMA · 45 SURROUNDS + 4 FLOWN SUBS',
     description:
       'High-density cinema surround configuration linking FOH Rack 02 ("BHS" mesh cabinet), 45 auditorium surround enclosures, and 4 flown 18-inch ceiling subwoofers.',
